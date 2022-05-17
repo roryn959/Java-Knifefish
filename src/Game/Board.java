@@ -47,10 +47,9 @@ public class Board implements BoardInterface {
         if (m.isCastleMove()){
             this.makeCastleMove(m);
         } else if (m.isEnpassant()){
-            System.out.println("Implement en passant");
+            this.makeEnpassantMove(m);
         } else {
-            this.board[m.getDestinationSquare()] = this.board[m.getSourceSquare()];
-            this.board[m.getSourceSquare()] = 0;
+            this.makeNormalMove(m);
         }
     }
 
@@ -85,6 +84,46 @@ public class Board implements BoardInterface {
             }
             this.castlePermissions[2] = false;
             this.castlePermissions[3] = false;
+        }
+    }
+
+    private void makeEnpassantMove(Move m){
+        this.board[m.getDestinationSquare()] = this.board[m.getSourceSquare()];
+        this.board[m.getSourceSquare()] = 0;
+
+        // If it's white making a move
+        if (this.board[m.getDestinationSquare()] > 0){
+            this.board[m.getDestinationSquare()+10] = 0;
+        } else {
+            this.board[m.getDestinationSquare()-10] = 0;
+        }
+    }
+
+    private void makeNormalMove(Move m){
+        this.board[m.getDestinationSquare()] = this.board[m.getSourceSquare()];
+        this.board[m.getSourceSquare()] = 0;
+
+        int pieceThatMoved = this.board[m.getDestinationSquare()];
+        // If it was the king that made the move, remove castle perms
+        if (pieceThatMoved == 6){
+            this.castlePermissions[0] = false;
+            this.castlePermissions[1] = false;
+        } else if (pieceThatMoved == -6){
+            this.castlePermissions[2] = false;
+            this.castlePermissions[3] = false;
+        } else if (pieceThatMoved == 4){
+            // If piece that moved was rook, remove corresponding castle perms
+            if (m.getSourceSquare() == 91){
+                this.castlePermissions[0] = false;
+            } else if (m.getSourceSquare() == 98){
+                this.castlePermissions[1] = false;
+            }
+        } else if (pieceThatMoved == -4){
+            if (m.getSourceSquare() == 21){
+                this.castlePermissions[2] = false;
+            } else if (m.getSourceSquare() == 28){
+                this.castlePermissions[3] = false;
+            }
         }
     }
 
