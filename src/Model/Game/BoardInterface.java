@@ -1,6 +1,6 @@
-package Game;
+package Model.Game;
 
-import DataStructures.Move;
+import Model.DataStructures.Move;
 
 public interface BoardInterface {
     public int[] getBoard();

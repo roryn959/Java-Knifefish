@@ -1,4 +1,4 @@
-package DataStructures;
+package Model.DataStructures;
 
 public class Move {
     private int sourceSquare;
