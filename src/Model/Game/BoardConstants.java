@@ -25,18 +25,18 @@ public class BoardConstants {
     public static final int[] KINGMOVES = {-1, -9, -10, -11, 1, 9, 10, 11};
 
     private static int[] startingBoard = {
-            69, 69, 69, 69, 69, 69, 69, 69, 69, 69,
-            69, 69, 69, 69, 69, 69, 69, 69, 69, 69,
-            69, BoardConstants.BLACK_ROOK, BoardConstants.BLACK_KNIGHT, BoardConstants.BLACK_BISHOP, BoardConstants.BLACK_QUEEN, BoardConstants.BLACK_KING, BoardConstants.BLACK_BISHOP, BoardConstants.BLACK_KNIGHT, BoardConstants.BLACK_ROOK, 69,
-            69, BoardConstants.BLACK_PAWN, BoardConstants.BLACK_PAWN, BoardConstants.BLACK_PAWN, BoardConstants.BLACK_PAWN, BoardConstants.BLACK_PAWN, BoardConstants.BLACK_PAWN, BoardConstants.BLACK_PAWN, BoardConstants.BLACK_PAWN, 69,
-            69, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, 69,
-            69, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, 69,
-            69, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, 69,
-            69, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, 69,
-            69, BoardConstants.WHITE_PAWN, BoardConstants.WHITE_PAWN, BoardConstants.WHITE_PAWN, BoardConstants.WHITE_PAWN, BoardConstants.WHITE_PAWN, BoardConstants.WHITE_PAWN, BoardConstants.WHITE_PAWN, BoardConstants.WHITE_PAWN, 69,
-            69, BoardConstants.WHITE_ROOK, BoardConstants.WHITE_KNIGHT, BoardConstants.WHITE_BISHOP, BoardConstants.WHITE_QUEEN, BoardConstants.WHITE_KING, BoardConstants.WHITE_BISHOP, BoardConstants.WHITE_KNIGHT, BoardConstants.WHITE_ROOK, 69,
-            69, 69, 69, 69, 69, 69, 69, 69, 69, 69,
-            69, 69, 69, 69, 69, 69, 69, 69, 69, 69,
+            BoardConstants.OUTSIDE_BOARD, BoardConstants.OUTSIDE_BOARD, BoardConstants.OUTSIDE_BOARD, BoardConstants.OUTSIDE_BOARD, BoardConstants.OUTSIDE_BOARD, BoardConstants.OUTSIDE_BOARD, BoardConstants.OUTSIDE_BOARD, BoardConstants.OUTSIDE_BOARD, BoardConstants.OUTSIDE_BOARD, BoardConstants.OUTSIDE_BOARD,
+            BoardConstants.OUTSIDE_BOARD, BoardConstants.OUTSIDE_BOARD, BoardConstants.OUTSIDE_BOARD, BoardConstants.OUTSIDE_BOARD, BoardConstants.OUTSIDE_BOARD, BoardConstants.OUTSIDE_BOARD, BoardConstants.OUTSIDE_BOARD, BoardConstants.OUTSIDE_BOARD, BoardConstants.OUTSIDE_BOARD, BoardConstants.OUTSIDE_BOARD,
+            BoardConstants.OUTSIDE_BOARD, BoardConstants.BLACK_ROOK, BoardConstants.BLACK_KNIGHT, BoardConstants.BLACK_BISHOP, BoardConstants.BLACK_QUEEN, BoardConstants.BLACK_KING, BoardConstants.BLACK_BISHOP, BoardConstants.BLACK_KNIGHT, BoardConstants.BLACK_ROOK, BoardConstants.OUTSIDE_BOARD,
+            BoardConstants.OUTSIDE_BOARD, BoardConstants.BLACK_PAWN, BoardConstants.BLACK_PAWN, BoardConstants.BLACK_PAWN, BoardConstants.BLACK_PAWN, BoardConstants.BLACK_PAWN, BoardConstants.BLACK_PAWN, BoardConstants.BLACK_PAWN, BoardConstants.BLACK_PAWN, BoardConstants.OUTSIDE_BOARD,
+            BoardConstants.OUTSIDE_BOARD, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.OUTSIDE_BOARD,
+            BoardConstants.OUTSIDE_BOARD, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.OUTSIDE_BOARD,
+            BoardConstants.OUTSIDE_BOARD, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.OUTSIDE_BOARD,
+            BoardConstants.OUTSIDE_BOARD, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.OUTSIDE_BOARD,
+            BoardConstants.OUTSIDE_BOARD, BoardConstants.WHITE_PAWN, BoardConstants.WHITE_PAWN, BoardConstants.WHITE_PAWN, BoardConstants.WHITE_PAWN, BoardConstants.WHITE_PAWN, BoardConstants.WHITE_PAWN, BoardConstants.WHITE_PAWN, BoardConstants.WHITE_PAWN, BoardConstants.OUTSIDE_BOARD,
+            BoardConstants.OUTSIDE_BOARD, BoardConstants.WHITE_ROOK, BoardConstants.WHITE_KNIGHT, BoardConstants.WHITE_BISHOP, BoardConstants.WHITE_QUEEN, BoardConstants.WHITE_KING, BoardConstants.WHITE_BISHOP, BoardConstants.WHITE_KNIGHT, BoardConstants.WHITE_ROOK, BoardConstants.OUTSIDE_BOARD,
+            BoardConstants.OUTSIDE_BOARD, BoardConstants.OUTSIDE_BOARD, BoardConstants.OUTSIDE_BOARD, BoardConstants.OUTSIDE_BOARD, BoardConstants.OUTSIDE_BOARD, BoardConstants.OUTSIDE_BOARD, BoardConstants.OUTSIDE_BOARD, BoardConstants.OUTSIDE_BOARD, BoardConstants.OUTSIDE_BOARD, BoardConstants.OUTSIDE_BOARD,
+            BoardConstants.OUTSIDE_BOARD, BoardConstants.OUTSIDE_BOARD, BoardConstants.OUTSIDE_BOARD, BoardConstants.OUTSIDE_BOARD, BoardConstants.OUTSIDE_BOARD, BoardConstants.OUTSIDE_BOARD, BoardConstants.OUTSIDE_BOARD, BoardConstants.OUTSIDE_BOARD, BoardConstants.OUTSIDE_BOARD, BoardConstants.OUTSIDE_BOARD,
     };
 
     public static int[] getStartingBoard(){

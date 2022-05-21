@@ -299,14 +299,14 @@ public class Board implements BoardInterface {
                 // Check pawn captures
                 newSquare = position+9;
                 pieceAtNewSquare = this.board[newSquare];
-                if (pieceAtNewSquare > 0 && pieceAtNewSquare != 69){
+                if (pieceAtNewSquare > 0 && pieceAtNewSquare != BoardConstants.OUTSIDE_BOARD){
                     moves.add(new Move(position, newSquare, false, false));
                 } else if (position+9 == this.enPassantSquare){
                     moves.add(new Move(position, newSquare, false, true));
                 }
                 newSquare = position+11;
                 pieceAtNewSquare = this.board[newSquare];
-                if (pieceAtNewSquare > 0 && pieceAtNewSquare != 69){
+                if (pieceAtNewSquare > 0 && pieceAtNewSquare != BoardConstants.OUTSIDE_BOARD){
                     moves.add(new Move(position, newSquare, false, false));
                 } else if (newSquare == this.enPassantSquare){
                     moves.add(new Move(position, newSquare, false, true));
@@ -318,7 +318,7 @@ public class Board implements BoardInterface {
                 for (int difference : BoardConstants.KNIGHTMOVES){
                     newSquare = position + difference;
                     pieceAtNewSquare = this.board[newSquare];
-                    if (pieceAtNewSquare >= 0 && pieceAtNewSquare != 69){
+                    if (pieceAtNewSquare >= 0 && pieceAtNewSquare != BoardConstants.OUTSIDE_BOARD){
                         moves.add(new Move(position, newSquare, false, false));
                     }
                 }
@@ -335,7 +335,7 @@ public class Board implements BoardInterface {
                             moves.add(new Move(position, newPosition, false, false));
                             newPosition = newPosition+direction;
                             continue;
-                        } else if (pieceAtNewSquare>0 && pieceAtNewSquare != 69){
+                        } else if (pieceAtNewSquare>0 && pieceAtNewSquare != BoardConstants.OUTSIDE_BOARD){
                             moves.add(new Move(position, newPosition, false, false));
                         }
                         break;
@@ -354,7 +354,7 @@ public class Board implements BoardInterface {
                             moves.add(new Move(position, newPosition, false, false));
                             newPosition = newPosition+direction;
                             continue;
-                        } else if (pieceAtNewSquare>0 && pieceAtNewSquare != 69){
+                        } else if (pieceAtNewSquare>0 && pieceAtNewSquare != BoardConstants.OUTSIDE_BOARD){
                             moves.add(new Move(position, newPosition, false, false));
                         }
                         break;
@@ -373,7 +373,7 @@ public class Board implements BoardInterface {
                             moves.add(new Move(position, newPosition, false, false));
                             newPosition = newPosition+direction;
                             continue;
-                        } else if (pieceAtNewSquare>0 && pieceAtNewSquare != 69){
+                        } else if (pieceAtNewSquare>0 && pieceAtNewSquare != BoardConstants.OUTSIDE_BOARD){
                             moves.add(new Move(position, newPosition, false, false));
                         }
                         break;
@@ -388,7 +388,7 @@ public class Board implements BoardInterface {
                             moves.add(new Move(position, newPosition, false, false));
                             newPosition = newPosition+direction;
                             continue;
-                        } else if (pieceAtNewSquare>0 && pieceAtNewSquare != 69){
+                        } else if (pieceAtNewSquare>0 && pieceAtNewSquare != BoardConstants.OUTSIDE_BOARD){
                             moves.add(new Move(position, newPosition, false, false));
                         }
                         break;
@@ -400,7 +400,7 @@ public class Board implements BoardInterface {
             for (int direction : BoardConstants.KINGMOVES){
                 newSquare = position + direction;
                 pieceAtNewSquare = this.board[newSquare];
-                if (pieceAtNewSquare >= 0 && pieceAtNewSquare != 69){
+                if (pieceAtNewSquare >= 0 && pieceAtNewSquare != BoardConstants.OUTSIDE_BOARD){
                     moves.add(new Move(position, newSquare, false, false));
                 }
             }
@@ -427,7 +427,7 @@ public class Board implements BoardInterface {
         System.out.print('\n');
 
         for (int i=0; i<this.board.length; i++){
-            if (this.board[i] != 69){
+            if (this.board[i] != BoardConstants.OUTSIDE_BOARD){
                 System.out.print(this.board[i]);
                 if (i%10 == 8){
                     System.out.print('\n');
