@@ -4,7 +4,6 @@ import Model.DataStructures.Move;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.TreeMap;
 
 public class Board implements BoardInterface {
     private int[] board;
@@ -74,40 +73,40 @@ public class Board implements BoardInterface {
                 this.board[93] = 6;
                 this.piecePositions.get(6).add(93);
                 this.board[91] = 0;
-                this.piecePositions.get(4).remove((Integer) 91);
-                this.board[94] = 4;
-                this.piecePositions.get(4).add(94);
+                this.piecePositions.get(BoardConstants.WHITE_ROOK).remove((Integer) 91);
+                this.board[94] = BoardConstants.WHITE_ROOK;
+                this.piecePositions.get(BoardConstants.WHITE_ROOK).add(94);
             } else {
                 this.board[95] = 0;
                 this.piecePositions.get(6).remove(0);
                 this.board[97] = 6;
                 this.piecePositions.get(6).add(97);
                 this.board[98] = 0;
-                this.piecePositions.get(4).remove((Integer) 98);
-                this.board[96] = 4;
-                this.piecePositions.get(4).add(96);
+                this.piecePositions.get(BoardConstants.WHITE_ROOK).remove((Integer) 98);
+                this.board[96] = BoardConstants.WHITE_ROOK;
+                this.piecePositions.get(BoardConstants.WHITE_ROOK).add(96);
             }
             this.castlePermissions[0] = false;
             this.castlePermissions[1] = false;
         } else {
             if (m.getDestinationSquare()==0){
-                this.board[25] = 0;
-                this.piecePositions.get(-6).remove(0);
-                this.board[23] = 6;
-                this.piecePositions.get(-6).add(23);
-                this.board[21] = 0;
-                this.piecePositions.get(-4).remove((Integer) 21);
-                this.board[24] = 4;
-                this.piecePositions.get(-4).add(24);
+                this.board[25] = BoardConstants.EMPTY;
+                this.piecePositions.get(BoardConstants.BLACK_KING).remove(0);
+                this.board[23] = BoardConstants.WHITE_KING;
+                this.piecePositions.get(BoardConstants.BLACK_KING).add(23);
+                this.board[21] = BoardConstants.EMPTY;
+                this.piecePositions.get(BoardConstants.BLACK_ROOK).remove((Integer) 21);
+                this.board[24] = BoardConstants.WHITE_ROOK;
+                this.piecePositions.get(BoardConstants.BLACK_ROOK).add(24);
             } else {
-                this.board[25] = 0;
-                this.piecePositions.get(-6).remove(0);
-                this.board[27] = 6;
-                this.piecePositions.get(-6).add(27);
-                this.board[28] = 0;
-                this.piecePositions.get(-4).remove((Integer) 28);
-                this.board[26] = 4;
-                this.piecePositions.get(-4).add(26);
+                this.board[25] = BoardConstants.EMPTY;
+                this.piecePositions.get(BoardConstants.BLACK_KING).remove(0);
+                this.board[27] = BoardConstants.WHITE_KING;
+                this.piecePositions.get(BoardConstants.BLACK_KING).add(27);
+                this.board[28] = BoardConstants.EMPTY;
+                this.piecePositions.get(BoardConstants.BLACK_ROOK).remove((Integer) 28);
+                this.board[26] = BoardConstants.WHITE_ROOK;
+                this.piecePositions.get(BoardConstants.BLACK_ROOK).add(26);
             }
             this.castlePermissions[2] = false;
             this.castlePermissions[3] = false;
@@ -118,49 +117,49 @@ public class Board implements BoardInterface {
         int takingPiece = this.board[m.getSourceSquare()];
         this.board[m.getDestinationSquare()] = takingPiece;
         this.piecePositions.get(takingPiece).add(m.getDestinationSquare());
-        this.board[m.getSourceSquare()] = 0;
+        this.board[m.getSourceSquare()] = BoardConstants.EMPTY;
         this.piecePositions.get(takingPiece).remove((Integer) m.getSourceSquare());
 
         // If it's white making a move
         if (takingPiece > 0){
-            this.board[m.getDestinationSquare()+10] = 0;
+            this.board[m.getDestinationSquare()+10] = BoardConstants.EMPTY;
             this.piecePositions.get(takingPiece*-1).remove((Integer) m.getDestinationSquare()+10);
         } else {
-            this.board[m.getDestinationSquare()-10] = 0;
+            this.board[m.getDestinationSquare()-10] = BoardConstants.EMPTY;
         }
     }
 
     private void makeNormalMove(Move m){
         this.board[m.getDestinationSquare()] = this.board[m.getSourceSquare()];
-        this.board[m.getSourceSquare()] = 0;
+        this.board[m.getSourceSquare()] = BoardConstants.EMPTY;
 
         int pieceThatMoved = this.board[m.getDestinationSquare()];
         // If it was the king that made the move, remove castle perms
-        if (pieceThatMoved == 6){
+        if (pieceThatMoved == BoardConstants.WHITE_KING){
             this.castlePermissions[0] = false;
             this.castlePermissions[1] = false;
-        } else if (pieceThatMoved == -6){
+        } else if (pieceThatMoved == BoardConstants.BLACK_KING){
             this.castlePermissions[2] = false;
             this.castlePermissions[3] = false;
-        } else if (pieceThatMoved == 4){
+        } else if (pieceThatMoved == BoardConstants.WHITE_ROOK){
             // If piece that moved was rook, remove corresponding castle perms
             if (m.getSourceSquare() == 91){
                 this.castlePermissions[0] = false;
             } else if (m.getSourceSquare() == 98){
                 this.castlePermissions[1] = false;
             }
-        } else if (pieceThatMoved == -4){
+        } else if (pieceThatMoved == BoardConstants.BLACK_ROOK){
             if (m.getSourceSquare() == 21){
                 this.castlePermissions[2] = false;
             } else if (m.getSourceSquare() == 28){
                 this.castlePermissions[3] = false;
             }
-        } else if (pieceThatMoved == 1){
+        } else if (pieceThatMoved == BoardConstants.WHITE_PAWN){
             // Add en passant square if applicable
             if (m.getSourceSquare() - m.getDestinationSquare() == 20){
                 this.enPassantSquare = m.getDestinationSquare() + 10;
             }
-        } else if (pieceThatMoved == -1){
+        } else if (pieceThatMoved == BoardConstants.BLACK_PAWN){
             if (m.getDestinationSquare() - m.getSourceSquare() == 20){
                 this.enPassantSquare = m.getSourceSquare() + 10;
             }
@@ -173,13 +172,13 @@ public class Board implements BoardInterface {
         int newPosition, pieceAtNewSquare, newSquare;
         if (this.whiteTurn){
             // White pawn moves
-            positions = this.piecePositions.get(1);
+            positions = this.piecePositions.get(BoardConstants.WHITE_PAWN);
             for (Integer position : positions){
                 // If square ahead of pawn is empty, can move there
-                if (this.board[position-10] == 0){
+                if (this.board[position-10] == BoardConstants.EMPTY){
                     moves.add(new Move(position, position-10, false, false));
                     // If both two squares ahead of pawn empty, can move
-                    if (this.board[position-20] == 0){
+                    if (this.board[position-20] == BoardConstants.EMPTY){
                         moves.add(new Move(position, position-20, false, false));
                     }
                 }
@@ -196,7 +195,7 @@ public class Board implements BoardInterface {
                 }
             }
             // White knight moves
-            positions = this.piecePositions.get(2);
+            positions = this.piecePositions.get(BoardConstants.WHITE_KNIGHT);
             for (int position : positions){
                 for (int difference : BoardConstants.KNIGHTMOVES){
                     newSquare = position + difference;
@@ -206,14 +205,14 @@ public class Board implements BoardInterface {
                 }
             }
             // White bishop moves
-            positions = this.piecePositions.get(3);
+            positions = this.piecePositions.get(BoardConstants.WHITE_BISHOP);
             for (int position : positions){
                 // For all different directions the bishop can go
                 for (int direction : BoardConstants.BISHOPMOVES){
                     newPosition = position + direction;
                     while (true){
                         pieceAtNewSquare = this.board[newPosition];
-                        if (pieceAtNewSquare == 0){
+                        if (pieceAtNewSquare == BoardConstants.EMPTY){
                             moves.add(new Move(position, newPosition, false, false));
                             newPosition = newPosition+direction;
                             continue;
@@ -225,14 +224,14 @@ public class Board implements BoardInterface {
                 }
             }
             // White rook moves
-            positions = this.piecePositions.get(4);
+            positions = this.piecePositions.get(BoardConstants.WHITE_ROOK);
             for (int position : positions){
                 // For all the different positions the rook can go
                 for (int direction : BoardConstants.ROOKMOVES){
                     newPosition = position + direction;
                     while (true){
                         pieceAtNewSquare = this.board[newPosition];
-                        if (pieceAtNewSquare == 0){
+                        if (pieceAtNewSquare == BoardConstants.EMPTY){
                             moves.add(new Move(position, newPosition, false, false));
                             newPosition = newPosition+direction;
                             continue;
@@ -244,14 +243,14 @@ public class Board implements BoardInterface {
                 }
             }
             // White queen moves
-            positions = this.piecePositions.get(5);
+            positions = this.piecePositions.get(BoardConstants.WHITE_QUEEN);
             for (int position : positions){
                 // Bishop-like queen moves
                 for (int direction : BoardConstants.BISHOPMOVES){
                     newPosition = position + direction;
                     while (true){
                         pieceAtNewSquare = this.board[newPosition];
-                        if (pieceAtNewSquare == 0){
+                        if (pieceAtNewSquare == BoardConstants.EMPTY){
                             moves.add(new Move(position, newPosition, false, false));
                             newPosition = newPosition+direction;
                             continue;
@@ -266,7 +265,7 @@ public class Board implements BoardInterface {
                     newPosition = position + direction;
                     while (true){
                         pieceAtNewSquare = this.board[newPosition];
-                        if (pieceAtNewSquare == 0){
+                        if (pieceAtNewSquare == BoardConstants.EMPTY){
                             moves.add(new Move(position, newPosition, false, false));
                             newPosition = newPosition+direction;
                             continue;
@@ -278,7 +277,7 @@ public class Board implements BoardInterface {
                 }
             }
             // White king moves
-            int position = this.piecePositions.get(6).get(0); // There's only one king
+            int position = this.piecePositions.get(BoardConstants.WHITE_KING).get(0); // There's only one king
             for (int direction : BoardConstants.KINGMOVES){
                 newSquare = position + direction;
                 if (this.board[newSquare] <= 0){
@@ -287,13 +286,13 @@ public class Board implements BoardInterface {
             }
         } else {
             // Black pawn moves
-            positions = this.piecePositions.get(-1);
+            positions = this.piecePositions.get(BoardConstants.BLACK_PAWN);
             for (Integer position : positions){
                 // If square ahead of pawn is empty, can move there
-                if (this.board[position+10] == 0){
+                if (this.board[position+10] == BoardConstants.EMPTY){
                     moves.add(new Move(position, position+10, false, false));
                     // If both two squares ahead of pawn empty, can move
-                    if (this.board[position+20] == 0){
+                    if (this.board[position+20] == BoardConstants.EMPTY){
                         moves.add(new Move(position, position+20, false, false));
                     }
                 }
@@ -314,7 +313,7 @@ public class Board implements BoardInterface {
                 }
             }
             // Black knight moves
-            positions = this.piecePositions.get(-2);
+            positions = this.piecePositions.get(BoardConstants.BLACK_KNIGHT);
             for (int position : positions){
                 for (int difference : BoardConstants.KNIGHTMOVES){
                     newSquare = position + difference;
@@ -325,14 +324,14 @@ public class Board implements BoardInterface {
                 }
             }
             // Black bishop moves
-            positions = this.piecePositions.get(-3);
+            positions = this.piecePositions.get(BoardConstants.BLACK_BISHOP);
             for (int position : positions){
                 // For all different directions the bishop can go
                 for (int direction : BoardConstants.BISHOPMOVES){
                     newPosition = position + direction;
                     while (true){
                         pieceAtNewSquare = this.board[newPosition];
-                        if (pieceAtNewSquare == 0){
+                        if (pieceAtNewSquare == BoardConstants.EMPTY){
                             moves.add(new Move(position, newPosition, false, false));
                             newPosition = newPosition+direction;
                             continue;
@@ -344,14 +343,14 @@ public class Board implements BoardInterface {
                 }
             }
             // Black rook moves
-            positions = this.piecePositions.get(-4);
+            positions = this.piecePositions.get(BoardConstants.BLACK_ROOK);
             for (int position : positions){
                 // For all the different positions the rook can go
                 for (int direction : BoardConstants.ROOKMOVES){
                     newPosition = position + direction;
                     while (true){
                         pieceAtNewSquare = this.board[newPosition];
-                        if (pieceAtNewSquare == 0){
+                        if (pieceAtNewSquare == BoardConstants.EMPTY){
                             moves.add(new Move(position, newPosition, false, false));
                             newPosition = newPosition+direction;
                             continue;
@@ -363,14 +362,14 @@ public class Board implements BoardInterface {
                 }
             }
             // Black queen moves
-            positions = this.piecePositions.get(-5);
+            positions = this.piecePositions.get(BoardConstants.BLACK_QUEEN);
             for (int position : positions){
                 // Bishop-like queen moves
                 for (int direction : BoardConstants.BISHOPMOVES){
                     newPosition = position + direction;
                     while (true){
                         pieceAtNewSquare = this.board[newPosition];
-                        if (pieceAtNewSquare == 0){
+                        if (pieceAtNewSquare == BoardConstants.EMPTY){
                             moves.add(new Move(position, newPosition, false, false));
                             newPosition = newPosition+direction;
                             continue;
@@ -385,7 +384,7 @@ public class Board implements BoardInterface {
                     newPosition = position + direction;
                     while (true){
                         pieceAtNewSquare = this.board[newPosition];
-                        if (pieceAtNewSquare == 0){
+                        if (pieceAtNewSquare == BoardConstants.EMPTY){
                             moves.add(new Move(position, newPosition, false, false));
                             newPosition = newPosition+direction;
                             continue;
@@ -397,7 +396,7 @@ public class Board implements BoardInterface {
                 }
             }
             // Black king moves
-            int position = this.piecePositions.get(-6).get(0); // There's only one king
+            int position = this.piecePositions.get(BoardConstants.BLACK_KING).get(0); // There's only one king
             for (int direction : BoardConstants.KINGMOVES){
                 newSquare = position + direction;
                 pieceAtNewSquare = this.board[newSquare];

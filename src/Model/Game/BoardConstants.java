@@ -4,18 +4,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class BoardConstants {
-    /*
-    White -> +
-    Black -> -
-    69: out of bounds
-    0: empty
-    1: pawn
-    2: knight
-    3: bishop
-    4: rook
-    5: queen
-    6: king
-     */
+    public static final int EMPTY = 0;
+    public static final int OUTSIDE_BOARD = 69;
+    public static final int WHITE_PAWN = 1;
+    public static final int WHITE_KNIGHT = 2;
+    public static final int WHITE_BISHOP = 3;
+    public static final int WHITE_ROOK = 4;
+    public static final int WHITE_QUEEN = 5;
+    public static final int WHITE_KING = 6;
+    public static final int BLACK_PAWN = -1;
+    public static final int BLACK_KNIGHT = -2;
+    public static final int BLACK_BISHOP = -3;
+    public static final int BLACK_ROOK = -4;
+    public static final int BLACK_QUEEN = -5;
+    public static final int BLACK_KING = -6;
 
     public static final int[] KNIGHTMOVES = {-8, -12, -19, -21, 8, 12, 19, 21};
     public static final int[] BISHOPMOVES = {-9, -11, 9, 11};
@@ -25,14 +27,14 @@ public class BoardConstants {
     private static int[] startingBoard = {
             69, 69, 69, 69, 69, 69, 69, 69, 69, 69,
             69, 69, 69, 69, 69, 69, 69, 69, 69, 69,
-            69, -4, -2, -3, -5, -6, -3, -2, -4, 69,
-            69, -1, -1, -1, -1, -1, -1, -1, -1, 69,
-            69, 0, 0, 0, 0, 0, 0, 0, 0, 69,
-            69, 0, 0, 0, 0, 0, 0, 0, 0, 69,
-            69, 0, 0, 0, 0, 0, 0, 0, 0, 69,
-            69, 0, 0, 0, 0, 0, 0, 0, 0, 69,
-            69, 1, 1, 1, 1, 1, 1, 1, 1, 69,
-            69, 4, 2, 3, 5, 6, 3, 2, 4, 69,
+            69, BoardConstants.BLACK_ROOK, BoardConstants.BLACK_KNIGHT, BoardConstants.BLACK_BISHOP, BoardConstants.BLACK_QUEEN, BoardConstants.BLACK_KING, BoardConstants.BLACK_BISHOP, BoardConstants.BLACK_KNIGHT, BoardConstants.BLACK_ROOK, 69,
+            69, BoardConstants.BLACK_PAWN, BoardConstants.BLACK_PAWN, BoardConstants.BLACK_PAWN, BoardConstants.BLACK_PAWN, BoardConstants.BLACK_PAWN, BoardConstants.BLACK_PAWN, BoardConstants.BLACK_PAWN, BoardConstants.BLACK_PAWN, 69,
+            69, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, 69,
+            69, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, 69,
+            69, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, 69,
+            69, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, BoardConstants.EMPTY, 69,
+            69, BoardConstants.WHITE_PAWN, BoardConstants.WHITE_PAWN, BoardConstants.WHITE_PAWN, BoardConstants.WHITE_PAWN, BoardConstants.WHITE_PAWN, BoardConstants.WHITE_PAWN, BoardConstants.WHITE_PAWN, BoardConstants.WHITE_PAWN, 69,
+            69, BoardConstants.WHITE_ROOK, BoardConstants.WHITE_KNIGHT, BoardConstants.WHITE_BISHOP, BoardConstants.WHITE_QUEEN, BoardConstants.WHITE_KING, BoardConstants.WHITE_BISHOP, BoardConstants.WHITE_KNIGHT, BoardConstants.WHITE_ROOK, 69,
             69, 69, 69, 69, 69, 69, 69, 69, 69, 69,
             69, 69, 69, 69, 69, 69, 69, 69, 69, 69,
     };
@@ -82,19 +84,19 @@ public class BoardConstants {
             whitePawnPositions.add(i);
         }
 
-        positions.put(-6, (ArrayList<Integer>) blackKingPositions.clone());
-        positions.put(-5, (ArrayList<Integer>) blackQueenPositions.clone());
-        positions.put(-4, (ArrayList<Integer>) blackRookPositions.clone());
-        positions.put(-3, (ArrayList<Integer>) blackBishopPositions.clone());
-        positions.put(-2, (ArrayList<Integer>) blackKnightPositions.clone());
-        positions.put(-1, (ArrayList<Integer>) blackPawnPositions.clone());
+        positions.put(BoardConstants.BLACK_KING, (ArrayList<Integer>) blackKingPositions.clone());
+        positions.put(BoardConstants.BLACK_QUEEN, (ArrayList<Integer>) blackQueenPositions.clone());
+        positions.put(BoardConstants.BLACK_ROOK, (ArrayList<Integer>) blackRookPositions.clone());
+        positions.put(BoardConstants.BLACK_BISHOP, (ArrayList<Integer>) blackBishopPositions.clone());
+        positions.put(BoardConstants.BLACK_KNIGHT, (ArrayList<Integer>) blackKnightPositions.clone());
+        positions.put(BoardConstants.BLACK_PAWN, (ArrayList<Integer>) blackPawnPositions.clone());
 
         positions.put(6, (ArrayList<Integer>) whiteKingPositions.clone());
-        positions.put(5, (ArrayList<Integer>) whiteQueenPositions.clone());
-        positions.put(4, (ArrayList<Integer>) whiteRookPositions.clone());
-        positions.put(3, (ArrayList<Integer>) whiteBishopPositions.clone());
-        positions.put(2, (ArrayList<Integer>) whiteKnightPositions.clone());
-        positions.put(1, (ArrayList<Integer>) whitePawnPositions.clone());
+        positions.put(BoardConstants.WHITE_QUEEN, (ArrayList<Integer>) whiteQueenPositions.clone());
+        positions.put(BoardConstants.WHITE_ROOK, (ArrayList<Integer>) whiteRookPositions.clone());
+        positions.put(BoardConstants.WHITE_BISHOP, (ArrayList<Integer>) whiteBishopPositions.clone());
+        positions.put(BoardConstants.WHITE_KNIGHT, (ArrayList<Integer>) whiteKnightPositions.clone());
+        positions.put(BoardConstants.WHITE_PAWN, (ArrayList<Integer>) whitePawnPositions.clone());
 
         return positions;
     }
