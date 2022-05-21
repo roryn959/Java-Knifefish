@@ -19,7 +19,11 @@ public class LinkedList_<T> implements Iterable<T> {
         return this.first;
     }
 
-    public void addItem(T item){
+    public T getFirstItem(){
+        return this.first.getItem();
+    }
+
+    public void add(T item){
         if (this.first == null){
             this.first = new LinkedListItem_<>(item);
         } else {
@@ -34,9 +38,18 @@ public class LinkedList_<T> implements Iterable<T> {
         }
     }
 
-    public void removeItemByValue(T item) throws InputMismatchException {
+    public void remove(T item) throws InputMismatchException {
         LinkedListItem_<T> tempItem = this.first;
         LinkedListItem_<T> nextItem = this.first.getNext();
+
+        // If there is just one element in list, check it and remove if applicable
+        if (nextItem == null){
+            if (tempItem.getItem() == item){
+                this.first = null;
+                return;
+            }
+        }
+        // Else look through until we find our item
         while (nextItem != null){
             if (nextItem.getItem() == item){
                 tempItem.setNext(nextItem.getNext());
@@ -46,6 +59,18 @@ public class LinkedList_<T> implements Iterable<T> {
                 nextItem = tempItem.getNext();
             }
         }
-        throw new InputMismatchException("Value " + item + "does not exist in list.");
+        System.out.println("Removal failed. Items which are in the positions list:");
+        for (T newItem : this){
+            System.out.print(newItem + ", ");
+        }
+        throw new InputMismatchException("Value " + item + " does not exist in list.");
+    }
+
+    public LinkedList_<T> clone(){
+        LinkedList_<T> newList = new LinkedList_<>();
+        for (T item : this){
+            newList.add(item);
+        }
+        return newList;
     }
 }

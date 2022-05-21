@@ -1,7 +1,7 @@
 package Model.Game;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import Model.DataStructures.LinkedList_;
 
 public class BoardConstants {
     public static final int EMPTY = 0;
@@ -43,60 +43,60 @@ public class BoardConstants {
         return startingBoard.clone();
     }
 
-    public static HashMap<Integer, ArrayList<Integer>> getStartingPiecePositions(){
-        HashMap<Integer, ArrayList<Integer>> positions = new HashMap<>();
+    public static HashMap<Integer, LinkedList_<Integer>> getStartingPiecePositions(){
+        HashMap<Integer, LinkedList_<Integer>> positions = new HashMap<>();
 
         // Black pieces
-        ArrayList<Integer> blackKingPositions = new ArrayList<>();
+        LinkedList_<Integer> blackKingPositions = new LinkedList_<>();
         blackKingPositions.add(25);
-        ArrayList<Integer> blackQueenPositions = new ArrayList<>();
+        LinkedList_<Integer> blackQueenPositions = new LinkedList_<>();
         blackQueenPositions.add(24);
-        ArrayList<Integer> blackRookPositions = new ArrayList<>();
+        LinkedList_<Integer> blackRookPositions = new LinkedList_<>();
         blackRookPositions.add(21);
         blackRookPositions.add(28);
-        ArrayList<Integer> blackBishopPositions = new ArrayList<>();
+        LinkedList_<Integer> blackBishopPositions = new LinkedList_<>();
         blackBishopPositions.add(23);
         blackBishopPositions.add(26);
-        ArrayList<Integer> blackKnightPositions = new ArrayList<>();
+        LinkedList_<Integer> blackKnightPositions = new LinkedList_<>();
         blackKnightPositions.add(22);
         blackKnightPositions.add(27);
-        ArrayList<Integer> blackPawnPositions = new ArrayList<>();
+        LinkedList_<Integer> blackPawnPositions = new LinkedList_<>();
         for (int i=31; i<39; i++){
             blackPawnPositions.add(i);
         }
 
         //White pieces
-        ArrayList<Integer> whiteKingPositions = new ArrayList<>();
+        LinkedList_<Integer> whiteKingPositions = new LinkedList_<>();
         whiteKingPositions.add(95);
-        ArrayList<Integer> whiteQueenPositions = new ArrayList<>();
+        LinkedList_<Integer> whiteQueenPositions = new LinkedList_<>();
         whiteQueenPositions.add(94);
-        ArrayList<Integer> whiteRookPositions = new ArrayList<>();
+        LinkedList_<Integer> whiteRookPositions = new LinkedList_<>();
         whiteRookPositions.add(91);
         whiteRookPositions.add(98);
-        ArrayList<Integer> whiteBishopPositions = new ArrayList<>();
+        LinkedList_<Integer> whiteBishopPositions = new LinkedList_<>();
         whiteBishopPositions.add(93);
         whiteBishopPositions.add(96);
-        ArrayList<Integer> whiteKnightPositions = new ArrayList<>();
+        LinkedList_<Integer> whiteKnightPositions = new LinkedList_<>();
         whiteKnightPositions.add(92);
         whiteKnightPositions.add(97);
-        ArrayList<Integer> whitePawnPositions = new ArrayList<>();
+        LinkedList_<Integer> whitePawnPositions = new LinkedList_<>();
         for (int i=81; i<89; i++){
             whitePawnPositions.add(i);
         }
 
-        positions.put(BoardConstants.BLACK_KING, (ArrayList<Integer>) blackKingPositions.clone());
-        positions.put(BoardConstants.BLACK_QUEEN, (ArrayList<Integer>) blackQueenPositions.clone());
-        positions.put(BoardConstants.BLACK_ROOK, (ArrayList<Integer>) blackRookPositions.clone());
-        positions.put(BoardConstants.BLACK_BISHOP, (ArrayList<Integer>) blackBishopPositions.clone());
-        positions.put(BoardConstants.BLACK_KNIGHT, (ArrayList<Integer>) blackKnightPositions.clone());
-        positions.put(BoardConstants.BLACK_PAWN, (ArrayList<Integer>) blackPawnPositions.clone());
+        positions.put(BoardConstants.BLACK_KING, blackKingPositions.clone());
+        positions.put(BoardConstants.BLACK_QUEEN, blackQueenPositions.clone());
+        positions.put(BoardConstants.BLACK_ROOK, blackRookPositions.clone());
+        positions.put(BoardConstants.BLACK_BISHOP, blackBishopPositions.clone());
+        positions.put(BoardConstants.BLACK_KNIGHT, blackKnightPositions.clone());
+        positions.put(BoardConstants.BLACK_PAWN, blackPawnPositions.clone());
 
-        positions.put(6, (ArrayList<Integer>) whiteKingPositions.clone());
-        positions.put(BoardConstants.WHITE_QUEEN, (ArrayList<Integer>) whiteQueenPositions.clone());
-        positions.put(BoardConstants.WHITE_ROOK, (ArrayList<Integer>) whiteRookPositions.clone());
-        positions.put(BoardConstants.WHITE_BISHOP, (ArrayList<Integer>) whiteBishopPositions.clone());
-        positions.put(BoardConstants.WHITE_KNIGHT, (ArrayList<Integer>) whiteKnightPositions.clone());
-        positions.put(BoardConstants.WHITE_PAWN, (ArrayList<Integer>) whitePawnPositions.clone());
+        positions.put(BoardConstants.WHITE_KING, whiteKingPositions.clone());
+        positions.put(BoardConstants.WHITE_QUEEN, whiteQueenPositions.clone());
+        positions.put(BoardConstants.WHITE_ROOK, whiteRookPositions.clone());
+        positions.put(BoardConstants.WHITE_BISHOP, whiteBishopPositions.clone());
+        positions.put(BoardConstants.WHITE_KNIGHT, whiteKnightPositions.clone());
+        positions.put(BoardConstants.WHITE_PAWN, whitePawnPositions.clone());
 
         return positions;
     }

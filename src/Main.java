@@ -31,6 +31,7 @@ public class Main {
         board.display();
         Move[] moves = new Move[] {m0, m1, m2, m3, m4, m5, m6, m7, m8, m9, m10};
         for (Move m : moves){
+            System.out.println("Making move " + m.getSourceSquare() + ", " + m.getDestinationSquare());
             board.makeMove(m);
             board.display();
         }

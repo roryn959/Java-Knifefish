@@ -1,8 +1,8 @@
 package Model.Game;
 
+import Model.DataStructures.LinkedList_;
 import Model.DataStructures.Move;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Board implements BoardInterface {
@@ -20,7 +20,7 @@ public class Board implements BoardInterface {
  */
     private boolean whiteTurn;
 
-    private HashMap<Integer, ArrayList<Integer>> piecePositions;
+    private HashMap<Integer, LinkedList_<Integer>> piecePositions;
 
     public Board(){
         this.board = BoardConstants.getStartingBoard();
@@ -68,21 +68,21 @@ public class Board implements BoardInterface {
         // Move destination square will be 0 if queenside, 1 if kingside
         if (m.getSourceSquare()==0){
             if (m.getDestinationSquare()==0){
-                this.board[95] = 0;
-                this.piecePositions.get(6).remove(0);
-                this.board[93] = 6;
-                this.piecePositions.get(6).add(93);
-                this.board[91] = 0;
-                this.piecePositions.get(BoardConstants.WHITE_ROOK).remove((Integer) 91);
+                this.board[95] = BoardConstants.EMPTY;
+                this.piecePositions.get(BoardConstants.WHITE_KING).remove(95);
+                this.board[93] = BoardConstants.WHITE_KING;
+                this.piecePositions.get(BoardConstants.WHITE_KING).add(93);
+                this.board[91] = BoardConstants.EMPTY;
+                this.piecePositions.get(BoardConstants.WHITE_ROOK).remove(91);
                 this.board[94] = BoardConstants.WHITE_ROOK;
                 this.piecePositions.get(BoardConstants.WHITE_ROOK).add(94);
             } else {
-                this.board[95] = 0;
-                this.piecePositions.get(6).remove(0);
-                this.board[97] = 6;
-                this.piecePositions.get(6).add(97);
-                this.board[98] = 0;
-                this.piecePositions.get(BoardConstants.WHITE_ROOK).remove((Integer) 98);
+                this.board[95] = BoardConstants.EMPTY;
+                this.piecePositions.get(BoardConstants.WHITE_KING).remove(95);
+                this.board[97] = BoardConstants.WHITE_KING;
+                this.piecePositions.get(BoardConstants.WHITE_KING).add(97);
+                this.board[98] = BoardConstants.EMPTY;
+                this.piecePositions.get(BoardConstants.WHITE_ROOK).remove(98);
                 this.board[96] = BoardConstants.WHITE_ROOK;
                 this.piecePositions.get(BoardConstants.WHITE_ROOK).add(96);
             }
@@ -95,7 +95,7 @@ public class Board implements BoardInterface {
                 this.board[23] = BoardConstants.WHITE_KING;
                 this.piecePositions.get(BoardConstants.BLACK_KING).add(23);
                 this.board[21] = BoardConstants.EMPTY;
-                this.piecePositions.get(BoardConstants.BLACK_ROOK).remove((Integer) 21);
+                this.piecePositions.get(BoardConstants.BLACK_ROOK).remove(21);
                 this.board[24] = BoardConstants.WHITE_ROOK;
                 this.piecePositions.get(BoardConstants.BLACK_ROOK).add(24);
             } else {
@@ -104,7 +104,7 @@ public class Board implements BoardInterface {
                 this.board[27] = BoardConstants.WHITE_KING;
                 this.piecePositions.get(BoardConstants.BLACK_KING).add(27);
                 this.board[28] = BoardConstants.EMPTY;
-                this.piecePositions.get(BoardConstants.BLACK_ROOK).remove((Integer) 28);
+                this.piecePositions.get(BoardConstants.BLACK_ROOK).remove(28);
                 this.board[26] = BoardConstants.WHITE_ROOK;
                 this.piecePositions.get(BoardConstants.BLACK_ROOK).add(26);
             }
@@ -118,57 +118,68 @@ public class Board implements BoardInterface {
         this.board[m.getDestinationSquare()] = takingPiece;
         this.piecePositions.get(takingPiece).add(m.getDestinationSquare());
         this.board[m.getSourceSquare()] = BoardConstants.EMPTY;
-        this.piecePositions.get(takingPiece).remove((Integer) m.getSourceSquare());
+        this.piecePositions.get(takingPiece).remove(m.getSourceSquare());
 
         // If it's white making a move
         if (takingPiece > 0){
             this.board[m.getDestinationSquare()+10] = BoardConstants.EMPTY;
-            this.piecePositions.get(takingPiece*-1).remove((Integer) m.getDestinationSquare()+10);
+            this.piecePositions.get(takingPiece*-1).remove(m.getDestinationSquare()+10);
         } else {
             this.board[m.getDestinationSquare()-10] = BoardConstants.EMPTY;
+            this.piecePositions.get(takingPiece*-1).remove(m.getDestinationSquare() -10);
         }
     }
 
     private void makeNormalMove(Move m){
+        int movingPiece = this.board[m.getSourceSquare()];
+        int capturedPiece = this.board[m.getDestinationSquare()];
+
+        // If the move is a capture, then remove the square from captured piece's positions
+        if (capturedPiece != BoardConstants.EMPTY){
+            this.piecePositions.get(capturedPiece).remove(m.getDestinationSquare());
+        }
+        System.out.println(this.piecePositions.get(BoardConstants.BLACK_KING).getFirstItem());
+        // Execute move
         this.board[m.getDestinationSquare()] = this.board[m.getSourceSquare()];
         this.board[m.getSourceSquare()] = BoardConstants.EMPTY;
+        this.piecePositions.get(movingPiece).remove(m.getSourceSquare());
+        this.piecePositions.get(movingPiece).add(m.getDestinationSquare());
 
-        int pieceThatMoved = this.board[m.getDestinationSquare()];
         // If it was the king that made the move, remove castle perms
-        if (pieceThatMoved == BoardConstants.WHITE_KING){
+        if (movingPiece == BoardConstants.WHITE_KING){
             this.castlePermissions[0] = false;
             this.castlePermissions[1] = false;
-        } else if (pieceThatMoved == BoardConstants.BLACK_KING){
+        } else if (movingPiece == BoardConstants.BLACK_KING){
             this.castlePermissions[2] = false;
             this.castlePermissions[3] = false;
-        } else if (pieceThatMoved == BoardConstants.WHITE_ROOK){
+        } else if (movingPiece == BoardConstants.WHITE_ROOK){
             // If piece that moved was rook, remove corresponding castle perms
             if (m.getSourceSquare() == 91){
                 this.castlePermissions[0] = false;
             } else if (m.getSourceSquare() == 98){
                 this.castlePermissions[1] = false;
             }
-        } else if (pieceThatMoved == BoardConstants.BLACK_ROOK){
+        } else if (movingPiece == BoardConstants.BLACK_ROOK){
             if (m.getSourceSquare() == 21){
                 this.castlePermissions[2] = false;
             } else if (m.getSourceSquare() == 28){
                 this.castlePermissions[3] = false;
             }
-        } else if (pieceThatMoved == BoardConstants.WHITE_PAWN){
+        } else if (movingPiece == BoardConstants.WHITE_PAWN){
             // Add en passant square if applicable
             if (m.getSourceSquare() - m.getDestinationSquare() == 20){
                 this.enPassantSquare = m.getDestinationSquare() + 10;
             }
-        } else if (pieceThatMoved == BoardConstants.BLACK_PAWN){
+        } else if (movingPiece == BoardConstants.BLACK_PAWN){
             if (m.getDestinationSquare() - m.getSourceSquare() == 20){
                 this.enPassantSquare = m.getSourceSquare() + 10;
             }
         }
     }
 
-    public ArrayList<Move> generateMoves(){
-        ArrayList<Move> moves = new ArrayList<>();
-        ArrayList<Integer> positions;
+    public LinkedList_<Move> generateMoves(){
+        LinkedList_<Move> moves = new LinkedList_<>();
+        LinkedList_<Integer> positions;
         int newPosition, pieceAtNewSquare, newSquare;
         if (this.whiteTurn){
             // White pawn moves
@@ -277,7 +288,7 @@ public class Board implements BoardInterface {
                 }
             }
             // White king moves
-            int position = this.piecePositions.get(BoardConstants.WHITE_KING).get(0); // There's only one king
+            int position = this.piecePositions.get(BoardConstants.WHITE_KING).getFirstItem(); // There's only one king
             for (int direction : BoardConstants.KINGMOVES){
                 newSquare = position + direction;
                 if (this.board[newSquare] <= 0){
@@ -396,7 +407,7 @@ public class Board implements BoardInterface {
                 }
             }
             // Black king moves
-            int position = this.piecePositions.get(BoardConstants.BLACK_KING).get(0); // There's only one king
+            int position = this.piecePositions.get(BoardConstants.BLACK_KING).getFirstItem(); // There's only one king
             for (int direction : BoardConstants.KINGMOVES){
                 newSquare = position + direction;
                 pieceAtNewSquare = this.board[newSquare];
@@ -434,11 +445,13 @@ public class Board implements BoardInterface {
                 }
             }
         }
-
-        ArrayList<Move> moves = this.generateMoves();
+        /*
+        LinkedList_<Move> moves = this.generateMoves();
         System.out.println("Possible moves in this position:");
         for (Move m : moves){
             m.display();
         }
+
+         */
     }
 }
