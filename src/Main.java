@@ -1,3 +1,4 @@
+import Model.DataStructures.LinkedList_;
 import Model.DataStructures.Move;
 import Model.Game.Board;
 
@@ -27,11 +28,11 @@ public class Main {
         //Ke7
         Move m10 = new Move(25, 35, false, false);
 
-        board.display();
-        Move[] moves = new Move[] {m0, m1, m2, m3, m4, m5, m6, m7, m8, m9, m10};
-        for (Move m : moves){
-            board.makeMove(m);
-            board.display();
-        }
+        //board.display();
+        //Move[] moves = new Move[] {m0, m1, m2, m3, m4, m5, m6, m7, m8, m9, m10};
+        //for (Move m : moves){
+            //board.makeMove(m);
+            //board.display();
+        //}
     }
 }
