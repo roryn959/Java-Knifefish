@@ -91,21 +91,21 @@ public class Board implements BoardInterface {
         } else {
             if (m.getDestinationSquare()==0){
                 this.board[25] = BoardConstants.EMPTY;
-                this.piecePositions.get(BoardConstants.BLACK_KING).remove(0);
-                this.board[23] = BoardConstants.WHITE_KING;
+                this.piecePositions.get(BoardConstants.BLACK_KING).remove(25);
+                this.board[23] = BoardConstants.BLACK_KING;
                 this.piecePositions.get(BoardConstants.BLACK_KING).add(23);
                 this.board[21] = BoardConstants.EMPTY;
                 this.piecePositions.get(BoardConstants.BLACK_ROOK).remove(21);
-                this.board[24] = BoardConstants.WHITE_ROOK;
+                this.board[24] = BoardConstants.BLACK_ROOK;
                 this.piecePositions.get(BoardConstants.BLACK_ROOK).add(24);
             } else {
                 this.board[25] = BoardConstants.EMPTY;
-                this.piecePositions.get(BoardConstants.BLACK_KING).remove(0);
-                this.board[27] = BoardConstants.WHITE_KING;
+                this.piecePositions.get(BoardConstants.BLACK_KING).remove(25);
+                this.board[27] = BoardConstants.BLACK_KING;
                 this.piecePositions.get(BoardConstants.BLACK_KING).add(27);
                 this.board[28] = BoardConstants.EMPTY;
                 this.piecePositions.get(BoardConstants.BLACK_ROOK).remove(28);
-                this.board[26] = BoardConstants.WHITE_ROOK;
+                this.board[26] = BoardConstants.BLACK_ROOK;
                 this.piecePositions.get(BoardConstants.BLACK_ROOK).add(26);
             }
             this.castlePermissions[2] = false;
@@ -138,7 +138,6 @@ public class Board implements BoardInterface {
         if (capturedPiece != BoardConstants.EMPTY){
             this.piecePositions.get(capturedPiece).remove(m.getDestinationSquare());
         }
-        System.out.println(this.piecePositions.get(BoardConstants.BLACK_KING).getFirstItem());
         // Execute move
         this.board[m.getDestinationSquare()] = this.board[m.getSourceSquare()];
         this.board[m.getSourceSquare()] = BoardConstants.EMPTY;
@@ -590,6 +589,7 @@ public class Board implements BoardInterface {
         }
         System.out.print('\n');
 
+        // Prints board itself
         for (int i=0; i<this.board.length; i++){
             if (this.board[i] != BoardConstants.OUTSIDE_BOARD){
                 System.out.print(this.board[i]);

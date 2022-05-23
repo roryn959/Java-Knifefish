@@ -28,7 +28,7 @@ public class Move {
         return this.enpassant;
     }
 
-    public boolean isEqual(Move m){
+    public boolean isEquivalent(Move m){
         return this.sourceSquare==m.getSourceSquare() && this.destinationSquare==m.getDestinationSquare() && this.castleMove==m.isCastleMove() && this.enpassant==m.isEnpassant();
     }
 
