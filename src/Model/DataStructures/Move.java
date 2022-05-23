@@ -28,6 +28,10 @@ public class Move {
         return this.enpassant;
     }
 
+    public boolean isEqual(Move m){
+        return this.sourceSquare==m.getSourceSquare() && this.destinationSquare==m.getDestinationSquare() && this.castleMove==m.isCastleMove() && this.enpassant==m.isEnpassant();
+    }
+
     public void display() {
         System.out.println("Printing move: ");
         System.out.println(this.sourceSquare);
