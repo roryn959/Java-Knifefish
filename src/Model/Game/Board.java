@@ -3,7 +3,9 @@ package Model.Game;
 import Model.DataStructures.LinkedList_;
 import Model.DataStructures.Move;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.InputMismatchException;
 
 public class Board implements BoardInterface {
     private int[] board;
@@ -49,6 +51,21 @@ public class Board implements BoardInterface {
 
     public boolean isWhiteTurn(){
         return this.whiteTurn;
+    }
+
+    public void giveMove(int fromSquare, int toSquare) throws InputMismatchException {
+        LinkedList_<Move> possibleMoves = this.generateMoves();
+        for (Move m : possibleMoves){
+            if (m.getSourceSquare()==fromSquare && m.getDestinationSquare()==toSquare){
+                // Move is valid
+                this.makeMove(m);
+                System.out.println("Move successfully made. Move in question:");
+                m.display();
+                return;
+            }
+        }
+        // No matching move found
+        throw new InputMismatchException();
     }
 
     public void makeMove(Move m){

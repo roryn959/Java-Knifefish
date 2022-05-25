@@ -3,12 +3,12 @@ package Model.Game;
 import Model.DataStructures.Move;
 
 public interface BoardInterface {
-    public int[] getBoard();
-    public boolean[] getCastlePermissions();
-    public boolean isInProgress();
-    public int getResult();
-    public boolean isWhiteTurn();
-    public void makeMove(Move m);
-    public void undoMove();
+    int[] getBoard();
+    boolean[] getCastlePermissions();
+    boolean isInProgress();
+    int getResult();
+    boolean isWhiteTurn();
+    void makeMove(Move m);
+    void undoMove();
 
 }
