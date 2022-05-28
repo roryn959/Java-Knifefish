@@ -1,10 +1,10 @@
 package Model.DataStructures;
 
 public class Move {
-    private int sourceSquare;
-    private int destinationSquare;
-    private boolean castleMove;
-    private boolean enpassant;
+    private final int sourceSquare;
+    private final int destinationSquare;
+    private final boolean castleMove;
+    private final boolean enpassant;
 
     public Move(int sourceSquare, int destinationSquare, boolean castleMove, boolean enpassant){
         this.sourceSquare = sourceSquare;
@@ -33,7 +33,6 @@ public class Move {
     }
 
     public void display() {
-        System.out.println("Printing move: ");
         System.out.println(this.sourceSquare);
         System.out.println(this.destinationSquare);
         System.out.println(this.castleMove);

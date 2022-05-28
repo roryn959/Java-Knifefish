@@ -21,7 +21,7 @@ public class BoardConstants {
 
     public static final int[] KNIGHTMOVES = {-8, -12, -19, -21, 8, 12, 19, 21};
     public static final int[] BISHOPMOVES = {-9, -11, 9, 11};
-    public static final int[] ROOKMOVES = {-1, -10, 1, -10};
+    public static final int[] ROOKMOVES = {-1, -10, 1, 10};
     public static final int[] KINGMOVES = {-1, -9, -10, -11, 1, 9, 10, 11};
 
     private static int[] startingBoard = {

@@ -6,6 +6,7 @@ import Model.DataStructures.Move;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.InputMismatchException;
+import java.util.Stack;
 
 public class Board implements BoardInterface {
     private int[] board;
@@ -22,7 +23,11 @@ public class Board implements BoardInterface {
  */
     private boolean whiteTurn;
 
-    private HashMap<Integer, LinkedList_<Integer>> piecePositions;
+    public HashMap<Integer, LinkedList_<Integer>> piecePositions;
+    private Stack<Move> moveHistory = new Stack<>();
+    private Stack<Integer> captureHistory = new Stack<>();
+    private Stack<Integer> enpassantHistory = new Stack<>();
+    private Stack<boolean[]> castleHistory = new Stack<>();
 
     public Board(){
         this.board = BoardConstants.getStartingBoard();
@@ -59,8 +64,6 @@ public class Board implements BoardInterface {
             if (m.getSourceSquare()==fromSquare && m.getDestinationSquare()==toSquare){
                 // Move is valid
                 this.makeMove(m);
-                System.out.println("Move successfully made. Move in question:");
-                m.display();
                 return;
             }
         }
@@ -68,8 +71,23 @@ public class Board implements BoardInterface {
         throw new InputMismatchException();
     }
 
+    public boolean gameOver(){
+        if (this.piecePositions.get(BoardConstants.WHITE_KING).getLength()==0 || this.piecePositions.get(BoardConstants.BLACK_KING).getLength()==0){
+            // If there either is no white king or no black king
+            return true;
+        } else {
+            // *** CHECK FOR STALEMATE ***
+        }
+        return false;
+    }
+
     public void makeMove(Move m){
+        this.enpassantHistory.push(this.enPassantSquare);
+        this.moveHistory.push(m);
+        this.castleHistory.push(this.castlePermissions.clone());
+        this.captureHistory.push(this.board[m.getDestinationSquare()]);
         this.enPassantSquare = 0;
+
         if (m.isCastleMove()){
             this.makeCastleMove(m);
         } else if (m.isEnpassant()){
@@ -193,6 +211,128 @@ public class Board implements BoardInterface {
         }
     }
 
+    public void undoMove(){
+        this.enPassantSquare = this.enpassantHistory.pop();
+        this.castlePermissions = this.castleHistory.pop();
+        int lastPieceCaptured = this.captureHistory.pop();
+        this.inProgress = true;
+        this.whiteTurn = !this.whiteTurn;
+        Move lastMove = this.moveHistory.pop();
+
+        if (lastMove.isCastleMove()){
+            this.undoCastleMove(lastMove);
+        } else if (lastMove.isEnpassant()){
+            this.undoEnpassantMove(lastMove);
+        } else {
+            this.undoNormalMove(lastMove, lastPieceCaptured);
+        }
+    }
+
+    private void undoCastleMove(Move lastMove){
+        if (lastMove.getSourceSquare()==0){
+            // It's a white castle move
+            if (lastMove.getDestinationSquare()==0){
+                // It's a white queenside castle
+                // Fix rook
+                this.board[94] = BoardConstants.EMPTY;
+                this.board[91] = BoardConstants.WHITE_ROOK;
+                LinkedList_<Integer> WRPositions = this.piecePositions.get(BoardConstants.WHITE_ROOK);
+                WRPositions.remove(94);
+                WRPositions.add(91);
+                // Fix king
+                this.board[93] = BoardConstants.EMPTY;
+                this.board[95] = BoardConstants.WHITE_KING;
+                LinkedList_<Integer> WKPositions = this.piecePositions.get(BoardConstants.WHITE_KING);
+                WKPositions.remove(93);
+                WKPositions.add(95);
+            } else{
+                // It's a white kingside castle
+                // Fix rook
+                this.board[96] = BoardConstants.EMPTY;
+                this.board[98] = BoardConstants.WHITE_ROOK;
+                LinkedList_<Integer> WRPositions = this.piecePositions.get(BoardConstants.WHITE_ROOK);
+                WRPositions.remove(96);
+                WRPositions.add(98);
+                // Fix king
+                this.board[97] = BoardConstants.EMPTY;
+                this.board[95] = BoardConstants.WHITE_KING;
+                LinkedList_<Integer> WKPositions = this.piecePositions.get(BoardConstants.WHITE_KING);
+                WKPositions.remove(97);
+                WKPositions.add(95);
+            }
+        } else {
+            // It's a black castle move
+            if (lastMove.getDestinationSquare()==0){
+                // It's a black queenside castle
+                // Fix rook
+                this.board[24] = BoardConstants.EMPTY;
+                this.board[21] = BoardConstants.BLACK_ROOK;
+                LinkedList_<Integer> BRPositions = this.piecePositions.get(BoardConstants.BLACK_ROOK);
+                BRPositions.remove(24);
+                BRPositions.add(21);
+                // Fix king
+                this.board[23] = BoardConstants.EMPTY;
+                this.board[25] = BoardConstants.BLACK_KING;
+                LinkedList_<Integer> BKPositions = this.piecePositions.get(BoardConstants.BLACK_KING);
+                BKPositions.remove(23);
+                BKPositions.add(25);
+            } else{
+                // It's a black kingside castle
+                // Fix rook
+                this.board[26] = BoardConstants.EMPTY;
+                this.board[28] = BoardConstants.BLACK_ROOK;
+                LinkedList_<Integer> BRPositions = this.piecePositions.get(BoardConstants.BLACK_ROOK);
+                BRPositions.remove(26);
+                BRPositions.add(28);
+                // Fix king
+                this.board[27] = BoardConstants.EMPTY;
+                this.board[25] = BoardConstants.BLACK_KING;
+                LinkedList_<Integer> BKPositions = this.piecePositions.get(BoardConstants.BLACK_KING);
+                BKPositions.remove(27);
+                BKPositions.add(25);
+            }
+        }
+    }
+
+    private void undoEnpassantMove(Move lastMove){
+        if (this.board[lastMove.getDestinationSquare()]==BoardConstants.WHITE_PAWN){
+            // If it's white making the en passant move
+            this.board[lastMove.getDestinationSquare()] = BoardConstants.EMPTY;
+            this.board[lastMove.getSourceSquare()] = BoardConstants.WHITE_PAWN;
+            this.board[lastMove.getDestinationSquare()+10] = BoardConstants.BLACK_PAWN;
+            // Update piece positions
+            LinkedList_ WPPositions = this.piecePositions.get(BoardConstants.WHITE_PAWN);
+            WPPositions.remove(lastMove.getDestinationSquare());
+            WPPositions.add(lastMove.getSourceSquare());
+            this.piecePositions.get(BoardConstants.BLACK_PAWN).add(lastMove.getDestinationSquare()+10);
+        } else {
+            // It's black making the en passant move
+            this.board[lastMove.getDestinationSquare()] = BoardConstants.EMPTY;
+            this.board[lastMove.getSourceSquare()] = BoardConstants.BLACK_PAWN;
+            this.board[lastMove.getDestinationSquare()-10] = BoardConstants.WHITE_PAWN;
+            // Update piece positions
+            LinkedList_ BPPositions = this.piecePositions.get(BoardConstants.BLACK_PAWN);
+            BPPositions.remove(lastMove.getDestinationSquare());
+            BPPositions.add(lastMove.getSourceSquare());
+            this.piecePositions.get(BoardConstants.WHITE_PAWN).add(lastMove.getDestinationSquare()-10);
+        }
+    }
+
+    private void undoNormalMove(Move lastMove, int lastPieceCaptured){
+        Integer pieceThatMoved = this.board[lastMove.getDestinationSquare()];
+        LinkedList_<Integer> pieceThatMovedPositions = this.piecePositions.get(pieceThatMoved);
+
+        this.board[lastMove.getDestinationSquare()] = lastPieceCaptured;
+        pieceThatMovedPositions.remove(lastMove.getDestinationSquare());
+        this.board[lastMove.getSourceSquare()] = pieceThatMoved;
+        pieceThatMovedPositions.add(lastMove.getSourceSquare());
+
+        // If it was a capture, sort the victim out
+        if (lastPieceCaptured!=BoardConstants.EMPTY){
+            this.piecePositions.get(lastPieceCaptured).add(lastMove.getDestinationSquare());
+        }
+    }
+
     public LinkedList_<Move> generateMoves(){
         LinkedList_<Move> moves = new LinkedList_<>();
         LinkedList_<Integer> positions;
@@ -204,8 +344,8 @@ public class Board implements BoardInterface {
                 // If square ahead of pawn is empty, can move there
                 if (this.board[position-10] == BoardConstants.EMPTY){
                     moves.add(new Move(position, position-10, false, false));
-                    // If both two squares ahead of pawn empty, can move
-                    if (this.board[position-20] == BoardConstants.EMPTY){
+                    // If both two squares ahead of pawn empty and on first pawn row, can move twice
+                    if (position/10==8 && this.board[position-20] == BoardConstants.EMPTY){
                         moves.add(new Move(position, position-20, false, false));
                     }
                 }
@@ -338,7 +478,7 @@ public class Board implements BoardInterface {
                 if (this.board[position+10] == BoardConstants.EMPTY){
                     moves.add(new Move(position, position+10, false, false));
                     // If both two squares ahead of pawn empty, can move
-                    if (this.board[position+20] == BoardConstants.EMPTY){
+                    if (position/10==2 && this.board[position+20] == BoardConstants.EMPTY){
                         moves.add(new Move(position, position+20, false, false));
                     }
                 }
@@ -589,14 +729,10 @@ public class Board implements BoardInterface {
         }
     }
 
-    public void undoMove(){
-        System.out.println("implement undo move");
-    }
-
     public void display(){
         System.out.println("\n\n*** Displaying board ***");
         if (!this.inProgress) {
-            System.out.print("Model.Game terminated with outcome ");
+            System.out.print("Game terminated with outcome ");
             System.out.println(this.result);
         }
 
@@ -615,13 +751,15 @@ public class Board implements BoardInterface {
                 }
             }
         }
-        /*
-        LinkedList_<Move> moves = this.generateMoves();
-        System.out.println("Possible moves in this position:");
-        for (Move m : moves){
-            m.display();
+        System.out.println("Showing piece positions");
+        for (Integer key : this.piecePositions.keySet()){
+            System.out.print("Piece ");
+            System.out.println(key);
+            for (Integer i : this.piecePositions.get(key)){
+                System.out.print(i);
+                System.out.print(", ");
+            }
+            System.out.println("");
         }
-
-         */
     }
 }

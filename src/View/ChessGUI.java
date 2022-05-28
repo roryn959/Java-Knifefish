@@ -5,7 +5,6 @@ import Controller.Hand;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class ChessGUI {
     ArrayList<JButton> boardButtons;
@@ -25,11 +24,26 @@ public class ChessGUI {
 
         // Create top castle buttons panel
         JPanel castleButtonsPanel = new JPanel();
+        // QS
         JButton queensideCastleButton = new JButton("Long Castle");
         queensideCastleButton.setFont(new Font("Arial", Font.PLAIN, 30));
+        queensideCastleButton.addActionListener(e -> {
+            this.notifyHandOfCastle(0);
+        });
+        castleButtonsPanel.add(queensideCastleButton);
+        // UNDO
+        JButton undoButton = new JButton("Undo Last Move");
+        undoButton.setFont(new Font("Arial", Font.PLAIN, 30));
+        undoButton.addActionListener(e -> {
+            this.notifyHandOfUndo();
+        });
+        castleButtonsPanel.add(undoButton);
+        // KS
         JButton kingsideCastleButton = new JButton("Short Castle");
         kingsideCastleButton.setFont(new Font("Arial", Font.PLAIN, 30));
-        castleButtonsPanel.add(queensideCastleButton);
+        kingsideCastleButton.addActionListener(e -> {
+            this.notifyHandOfCastle(1);
+        });
         castleButtonsPanel.add(kingsideCastleButton);
 
         // Create board panel
@@ -40,13 +54,21 @@ public class ChessGUI {
             if (i<21 || i>98 || i%10==0 || i%10==9){
                 this.boardButtons.add(null);
             } else {
+                JPanel buttonPanel = new JPanel();
+                // Colour board squares correctly
+                if ((i/10 + i%10)%2!=0){
+                    buttonPanel.setBackground(new Color(255, 239, 204));
+                } else {
+                    buttonPanel.setBackground(new Color(179, 124, 87));
+                }
                 JButton button = new JButton();
                 int finalI = i;
                 button.addActionListener(e -> {
                     this.boardButtonClicked(finalI);
                 });
                 button.setFont(new Font("Arial", Font.PLAIN, 40));
-                boardPanel.add(button);
+                buttonPanel.add(button);
+                boardPanel.add(buttonPanel);
                 this.boardButtons.add(button);
             }
         }
@@ -69,6 +91,14 @@ public class ChessGUI {
 
     private void notifyHandOfMove(){
         this.hand.submitMove(this.fromSquare, this.toSquare);
+    }
+
+    private void notifyHandOfCastle(int side){
+        this.hand.submitCastle(side);
+    }
+
+    private void notifyHandOfUndo(){
+        this.hand.undoMove();
     }
 
     public void updateBoard(int[] board){
@@ -97,7 +127,7 @@ public class ChessGUI {
         } else if (piece==-1){
             return "♟";
         } else if (piece==0){
-            return "";
+            return " ";
         } else if (piece==1){
             return "♙";
         } else if (piece==2){

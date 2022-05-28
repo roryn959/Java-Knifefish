@@ -75,7 +75,9 @@ public class LinkedList_<T> implements Iterable<T> {
                 nextItem = currentItem.getNext();
             }
         }
-        System.out.println("Removal failed. Items which are in the positions list:");
+        System.out.print("Removal failed. Attempted to remove value ");
+        System.out.print(item);
+        System.out.println("Items which are in the positions list:");
         for (T newItem : this){
             System.out.print(newItem + ", ");
         }
