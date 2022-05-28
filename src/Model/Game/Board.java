@@ -454,7 +454,7 @@ public class Board implements BoardInterface {
             // White queenside castle
             if (this.castlePermissions[0]){
                 // If white has no pieces blocking the squares
-                if (this.board[92]==BoardConstants.EMPTY && this.board[93]==BoardConstants.EMPTY && this.board[94]==BoardConstants.EMPTY){
+                if (this.board[92]==BoardConstants.EMPTY && this.board[93]==BoardConstants.EMPTY && this.board[94]==BoardConstants.EMPTY && this.board[91]==BoardConstants.WHITE_ROOK){
                     // If black is not attacking king crossover squares
                     if (!this.isAttacked(93, false) && !this.isAttacked(94, false) && !this.isAttacked(95, false)){
                         moves.add(new Move(0, 0, true, false));
@@ -464,7 +464,7 @@ public class Board implements BoardInterface {
             // White kingside castle
             if (this.castlePermissions[1]){
                 // If no pieces blocking
-                if (this.board[96]==BoardConstants.EMPTY && this.board[97]==BoardConstants.EMPTY){
+                if (this.board[96]==BoardConstants.EMPTY && this.board[97]==BoardConstants.EMPTY && this.board[98]==BoardConstants.WHITE_ROOK){
                     if (!this.isAttacked(95, false) && !this.isAttacked(96, false) && !this.isAttacked(97, false)){
                         moves.add(new Move(0, 1, true, false));
                     }
@@ -593,7 +593,7 @@ public class Board implements BoardInterface {
             // Black queenside castle
             if (this.castlePermissions[2]){
                 // If black has no pieces blocking the squares
-                if (this.board[22]==BoardConstants.EMPTY && this.board[23]==BoardConstants.EMPTY && this.board[24]==BoardConstants.EMPTY){
+                if (this.board[22]==BoardConstants.EMPTY && this.board[23]==BoardConstants.EMPTY && this.board[24]==BoardConstants.EMPTY && this.board[21]==BoardConstants.BLACK_ROOK){
                     // If white is not attacking king crossover squares
                     if (!this.isAttacked(23, true) && !this.isAttacked(24, true) && !this.isAttacked(25, true)){
                         moves.add(new Move(1, 0, true, false));
@@ -603,7 +603,7 @@ public class Board implements BoardInterface {
             // Black kingside castle
             if (this.castlePermissions[3]){
                 // If no pieces blocking
-                if (this.board[26]==BoardConstants.EMPTY && this.board[27]==BoardConstants.EMPTY){
+                if (this.board[26]==BoardConstants.EMPTY && this.board[27]==BoardConstants.EMPTY && this.board[28]==BoardConstants.BLACK_ROOK){
                     if (!this.isAttacked(25, true) && !this.isAttacked(26, true) && !this.isAttacked(27, true)){
                         moves.add(new Move(1, 1, true, false));
                     }

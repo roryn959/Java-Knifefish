@@ -66,7 +66,10 @@ public class ChessGUI {
                 button.addActionListener(e -> {
                     this.boardButtonClicked(finalI);
                 });
-                button.setFont(new Font("Arial", Font.PLAIN, 40));
+                button.setFont(new Font("Arial", Font.PLAIN, 50));
+                button.setOpaque(false);
+                button.setContentAreaFilled(false);
+                button.setBorderPainted(false);
                 buttonPanel.add(button);
                 boardPanel.add(buttonPanel);
                 this.boardButtons.add(button);

@@ -1,10 +1,10 @@
 package Controller;
 
 import Model.DataStructures.Move;
-import Model.DataStructures.Tuple;
 import Model.Game.Board;
-import Model.Players.BasicMinimaxPlayer;
-import Model.Players.RandomPlayer;
+import Model.Players.AlphabetaPlayer;
+import Model.Players.MinimaxPlayer;
+import Model.Players.PlayerInterface;
 import View.ChessGUI;
 
 import java.util.InputMismatchException;
@@ -18,12 +18,10 @@ public class Hand {
     }
 
     public void makeCPUMove(){
-        BasicMinimaxPlayer engine = new BasicMinimaxPlayer(this.board);
+        System.out.println("Thinking...");
+        PlayerInterface engine = new AlphabetaPlayer(this.board);
         Move engineMove = engine.findMove();
-        //Move engineMove = RandomPlayer.findMove(this.board);
         this.board.makeMove(engineMove);
-        this.board.display();
-
     }
 
     public void submitMove(int fromSquare, int toSquare){

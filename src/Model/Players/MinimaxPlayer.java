@@ -4,38 +4,15 @@ import Model.DataStructures.LinkedList_;
 import Model.DataStructures.Move;
 import Model.DataStructures.Tuple;
 import Model.Game.Board;
-import Model.Game.BoardConstants;
 
-import java.util.HashMap;
-
-public class BasicMinimaxPlayer {
-    private HashMap<Integer, Integer> pieceValues;
+public class MinimaxPlayer implements PlayerInterface {
     private Board board;
-    public final int DEPTH = 4;
+    private final int DEPTH = 5;
+    private final EvaluationInterface evaluator;
 
-    public BasicMinimaxPlayer(Board board){
+    public MinimaxPlayer(Board board){
         this.board = board;
-        this.pieceValues = new HashMap<>();
-        this.pieceValues.put(BoardConstants.WHITE_PAWN, 100);
-        this.pieceValues.put(BoardConstants.BLACK_PAWN, -100);
-        this.pieceValues.put(BoardConstants.WHITE_KNIGHT, 320);
-        this.pieceValues.put(BoardConstants.BLACK_KNIGHT, -320);
-        this.pieceValues.put(BoardConstants.WHITE_BISHOP, 330);
-        this.pieceValues.put(BoardConstants.BLACK_BISHOP, -330);
-        this.pieceValues.put(BoardConstants.WHITE_ROOK, 500);
-        this.pieceValues.put(BoardConstants.BLACK_ROOK, -500);
-        this.pieceValues.put(BoardConstants.WHITE_QUEEN, 900);
-        this.pieceValues.put(BoardConstants.BLACK_QUEEN, -900);
-        this.pieceValues.put(BoardConstants.WHITE_KING, 20000);
-        this.pieceValues.put(BoardConstants.BLACK_KING, -20000);
-    }
-
-    public int evaluate(){
-        int total = 0;
-        for (Integer key : board.piecePositions.keySet()){
-            total = total + board.piecePositions.get(key).getLength() * this.pieceValues.get(key);
-        }
-        return total;
+        this.evaluator = new SimpleEvaluation(this.board);
     }
 
     public Move findMove(){
@@ -44,11 +21,8 @@ public class BasicMinimaxPlayer {
     }
 
     public Tuple<Move, Integer> minimax(int depth){
-        //System.out.print("Minimax at depth ");
-        //System.out.print(depth);
-        //System.out.println(this.board.isWhiteTurn());
         if (depth==0 || this.board.gameOver()){
-            return new Tuple<>(null, this.evaluate());
+            return new Tuple<>(null, this.evaluator.evaluate());
         }
         if (this.board.isWhiteTurn()){
             int bestScore = -40000;
