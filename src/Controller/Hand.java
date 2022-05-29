@@ -22,6 +22,26 @@ public class Hand {
         PlayerInterface engine = new AlphabetaPlayer(this.board);
         Move engineMove = engine.findMove();
         this.board.makeMove(engineMove);
+
+        // Colour board appropriately
+        if (engineMove.isCastleMove()){
+            if (engineMove.getSourceSquare()==0){
+                if (engineMove.getDestinationSquare()==0){
+                    this.gui.highlightSquare(93);
+                } else {
+                    this.gui.highlightSquare(97);
+                }
+            } else {
+                if (engineMove.getDestinationSquare()==0){
+                    this.gui.highlightSquare(23);
+                } else{
+                    this.gui.highlightSquare(27);
+                }
+            }
+        } else {
+            this.gui.highlightSquare(engineMove.getDestinationSquare());
+        }
+        System.out.println("Done thinking!");
     }
 
     public void submitMove(int fromSquare, int toSquare){

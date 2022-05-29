@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 public class ChessGUI {
     ArrayList<JButton> boardButtons;
+    ArrayList<JPanel> buttonPanels;
     Integer fromSquare, toSquare;
     Hand hand;
 
@@ -50,42 +51,59 @@ public class ChessGUI {
         JPanel boardPanel = new JPanel();
         boardPanel.setLayout(new GridLayout(8, 8));
         this.boardButtons = new ArrayList<>();
+        this.buttonPanels = new ArrayList<>();
         for (int i=0; i<120; i++){
             if (i<21 || i>98 || i%10==0 || i%10==9){
                 this.boardButtons.add(null);
+                this.buttonPanels.add(null);
             } else {
                 JPanel buttonPanel = new JPanel();
-                // Colour board squares correctly
-                if ((i/10 + i%10)%2!=0){
-                    buttonPanel.setBackground(new Color(255, 239, 204));
-                } else {
-                    buttonPanel.setBackground(new Color(179, 124, 87));
-                }
                 JButton button = new JButton();
+
+                // Add clicking function
                 int finalI = i;
                 button.addActionListener(e -> {
                     this.boardButtonClicked(finalI);
                 });
+
+                // Format button style
                 button.setFont(new Font("Arial", Font.PLAIN, 50));
                 button.setOpaque(false);
                 button.setContentAreaFilled(false);
                 button.setBorderPainted(false);
+
                 buttonPanel.add(button);
                 boardPanel.add(buttonPanel);
                 this.boardButtons.add(button);
+                this.buttonPanels.add(buttonPanel);
             }
         }
-
         frame.getContentPane().add(castleButtonsPanel, BorderLayout.PAGE_START);
         frame.getContentPane().add(boardPanel, BorderLayout.CENTER);
         frame.setVisible(true);
+        this.colourBoardDefault();
+    }
+
+    private void colourBoardDefault(){
+        for (int i=0; i<120; i++){
+            JPanel panel = this.buttonPanels.get(i);
+            if (panel!=null) {
+                if ((i / 10 + i % 10) % 2 != 0) {
+                    panel.setBackground(new Color(255, 239, 204));
+                } else {
+                    panel.setBackground(new Color(179, 124, 87));
+                }
+            }
+        }
     }
 
     private void boardButtonClicked(int square){
         if (fromSquare==null){
             fromSquare = square;
+            this.highlightSquare(square);
         } else {
             toSquare = square;
+            this.colourBoardDefault();
             this.notifyHandOfMove();
             this.fromSquare = null;
             this.toSquare = null;
@@ -114,6 +132,10 @@ public class ChessGUI {
                 this.boardButtons.get(i).setText(pieceSymbol);
             }
         }
+    }
+
+    public void highlightSquare(int i){
+        this.buttonPanels.get(i).setBackground(Color.ORANGE);
     }
 
     private String getSymbolOfPiece(int piece){
