@@ -11,7 +11,7 @@ public class AlphabetaPlayer implements PlayerInterface {
     private final int DEPTH = 6;
     public AlphabetaPlayer(Board board){
         this.board = board;
-        this.evaluator = new SimpleEvaluation(board);
+        this.evaluator = new AdvancedEvaluation(board);
     }
 
     public Move findMove(){
