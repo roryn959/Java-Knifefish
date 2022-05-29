@@ -28,6 +28,7 @@ public class Board implements BoardInterface {
     private Stack<Integer> captureHistory = new Stack<>();
     private Stack<Integer> enpassantHistory = new Stack<>();
     private Stack<boolean[]> castleHistory = new Stack<>();
+    private Stack<Boolean> promotionHistory = new Stack<>();
 
     public Board(){
         this.board = BoardConstants.getStartingBoard();
@@ -90,8 +91,10 @@ public class Board implements BoardInterface {
 
         if (m.isCastleMove()){
             this.makeCastleMove(m);
+            this.promotionHistory.push(false);
         } else if (m.isEnpassant()){
             this.makeEnpassantMove(m);
+            this.promotionHistory.push(false);
         } else {
             this.makeNormalMove(m);
         }
@@ -168,6 +171,7 @@ public class Board implements BoardInterface {
     private void makeNormalMove(Move m){
         int movingPiece = this.board[m.getSourceSquare()];
         int capturedPiece = this.board[m.getDestinationSquare()];
+        boolean promotionPushed = false;
 
         // If the move is a capture, then remove the square from captured piece's positions
         if (capturedPiece != BoardConstants.EMPTY){
@@ -200,14 +204,34 @@ public class Board implements BoardInterface {
                 this.castlePermissions[3] = false;
             }
         } else if (movingPiece == BoardConstants.WHITE_PAWN){
+            // Check for promotions and en passant opportunities if pawn move
+
             // Add en passant square if applicable
             if (m.getSourceSquare() - m.getDestinationSquare() == 20){
                 this.enPassantSquare = m.getDestinationSquare() + 10;
+            } else if (m.getDestinationSquare()/10==2){
+                // Promotion. We will assume autoqueen as it's rare to underpromote.
+                this.piecePositions.get(BoardConstants.WHITE_PAWN).remove(m.getDestinationSquare());
+                this.board[m.getDestinationSquare()] = BoardConstants.WHITE_QUEEN;
+                this.piecePositions.get(BoardConstants.WHITE_QUEEN).add(m.getDestinationSquare());
+                this.promotionHistory.push(true);
+                promotionPushed = true;
             }
         } else if (movingPiece == BoardConstants.BLACK_PAWN){
             if (m.getDestinationSquare() - m.getSourceSquare() == 20){
                 this.enPassantSquare = m.getSourceSquare() + 10;
+            } else if (m.getDestinationSquare()/10==9){
+                this.piecePositions.get(BoardConstants.BLACK_PAWN).remove(m.getDestinationSquare());
+                this.board[m.getDestinationSquare()] = BoardConstants.BLACK_QUEEN;
+                this.piecePositions.get(BoardConstants.BLACK_QUEEN).add(m.getDestinationSquare());
+                this.promotionHistory.push(true);
+                promotionPushed = true;
             }
+        }
+
+        // Push non-promotion if applicable
+        if (!promotionPushed){
+            this.promotionHistory.push(false);
         }
     }
 
@@ -218,13 +242,14 @@ public class Board implements BoardInterface {
         this.inProgress = true;
         this.whiteTurn = !this.whiteTurn;
         Move lastMove = this.moveHistory.pop();
+        boolean promotion = this.promotionHistory.pop();
 
         if (lastMove.isCastleMove()){
             this.undoCastleMove(lastMove);
         } else if (lastMove.isEnpassant()){
             this.undoEnpassantMove(lastMove);
         } else {
-            this.undoNormalMove(lastMove, lastPieceCaptured);
+            this.undoNormalMove(lastMove, lastPieceCaptured, promotion);
         }
     }
 
@@ -318,7 +343,7 @@ public class Board implements BoardInterface {
         }
     }
 
-    private void undoNormalMove(Move lastMove, int lastPieceCaptured){
+    private void undoNormalMove(Move lastMove, int lastPieceCaptured, boolean promotion){
         Integer pieceThatMoved = this.board[lastMove.getDestinationSquare()];
         LinkedList_<Integer> pieceThatMovedPositions = this.piecePositions.get(pieceThatMoved);
 
@@ -330,6 +355,18 @@ public class Board implements BoardInterface {
         // If it was a capture, sort the victim out
         if (lastPieceCaptured!=BoardConstants.EMPTY){
             this.piecePositions.get(lastPieceCaptured).add(lastMove.getDestinationSquare());
+        }
+
+        if (promotion){
+            if (pieceThatMoved==BoardConstants.WHITE_QUEEN){
+                this.board[lastMove.getSourceSquare()] = BoardConstants.WHITE_PAWN;
+                this.piecePositions.get(BoardConstants.WHITE_QUEEN).remove(lastMove.getSourceSquare());
+                this.piecePositions.get(BoardConstants.WHITE_PAWN).add(lastMove.getSourceSquare());
+            } else {
+                this.board[lastMove.getSourceSquare()] = BoardConstants.BLACK_PAWN;
+                this.piecePositions.get(BoardConstants.BLACK_QUEEN).remove(lastMove.getSourceSquare());
+                this.piecePositions.get(BoardConstants.BLACK_PAWN).add(lastMove.getSourceSquare());
+            }
         }
     }
 
@@ -478,7 +515,7 @@ public class Board implements BoardInterface {
                 if (this.board[position+10] == BoardConstants.EMPTY){
                     moves.add(new Move(position, position+10, false, false));
                     // If both two squares ahead of pawn empty, can move
-                    if (position/10==2 && this.board[position+20] == BoardConstants.EMPTY){
+                    if (position/10==3 && this.board[position+20] == BoardConstants.EMPTY){
                         moves.add(new Move(position, position+20, false, false));
                     }
                 }

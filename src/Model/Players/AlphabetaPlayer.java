@@ -8,7 +8,7 @@ import Model.Game.Board;
 public class AlphabetaPlayer implements PlayerInterface {
     private Board board;
     private EvaluationInterface evaluator;
-    private final int DEPTH = 6;
+    private final int DEPTH = 5;
     public AlphabetaPlayer(Board board){
         this.board = board;
         this.evaluator = new AdvancedEvaluation(board);
