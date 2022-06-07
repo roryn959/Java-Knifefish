@@ -9,6 +9,7 @@ public class MinimaxPlayer implements PlayerInterface {
     private Board board;
     private final int DEPTH = 5;
     private final EvaluationInterface evaluator;
+    private int iterations;
 
     public MinimaxPlayer(Board board){
         this.board = board;
@@ -16,11 +17,15 @@ public class MinimaxPlayer implements PlayerInterface {
     }
 
     public Move findMove(){
+        this.iterations = 0;
         Tuple<Move, Integer> outcome = this.minimax(this.DEPTH);
+        System.out.print("Iterations: ");
+        System.out.println(iterations);
         return outcome.x;
     }
 
     public Tuple<Move, Integer> minimax(int depth){
+        this.iterations++;
         if (depth==0 || this.board.gameOver()){
             return new Tuple<>(null, this.evaluator.evaluate());
         }

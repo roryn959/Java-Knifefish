@@ -3,24 +3,17 @@ package Model.Game;
 import Model.DataStructures.LinkedList_;
 import Model.DataStructures.Move;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Stack;
 
-public class Board implements BoardInterface {
+public class Board {
     private int[] board;
     private boolean[] castlePermissions;
     // permissions -> [white queenside, white kingside, black queenside, black kingside]
     private int enPassantSquare;
     private boolean inProgress;
-    private int result;
-    /*
-    Results:
-    -1 -> black win
-    0 -> draw
-    1 -> white win
- */
+    private int moveCount;
     private boolean whiteTurn;
 
     public HashMap<Integer, LinkedList_<Integer>> piecePositions;
@@ -37,6 +30,7 @@ public class Board implements BoardInterface {
         this.inProgress = true;
         this.whiteTurn = true;
         this.enPassantSquare = 0; // 0 means no en passant squares are present
+        this.moveCount = 0;
     }
 
     public int[] getBoard(){
@@ -51,8 +45,8 @@ public class Board implements BoardInterface {
         return this.inProgress;
     }
 
-    public int getResult(){
-        return this.result;
+    public int getMoveCount(){
+        return this.moveCount;
     }
 
     public boolean isWhiteTurn(){
@@ -83,6 +77,7 @@ public class Board implements BoardInterface {
     }
 
     public void makeMove(Move m){
+        this.moveCount++;
         this.enpassantHistory.push(this.enPassantSquare);
         this.moveHistory.push(m);
         this.castleHistory.push(this.castlePermissions.clone());
@@ -236,6 +231,7 @@ public class Board implements BoardInterface {
     }
 
     public void undoMove(){
+        this.moveCount--;
         this.enPassantSquare = this.enpassantHistory.pop();
         this.castlePermissions = this.castleHistory.pop();
         int lastPieceCaptured = this.captureHistory.pop();
@@ -650,6 +646,18 @@ public class Board implements BoardInterface {
         return moves;
     }
 
+    public LinkedList_<Move> generateCaptures(){
+        LinkedList_<Move> moves = this.generateMoves();
+        LinkedList_<Move> captures = new LinkedList_<>();
+        for (Move m : moves){
+            // If move is en pas or is not a castle and leads to an empty square, it's a capture
+            if (m.isEnpassant() || (!m.isCastleMove() && this.board[m.getDestinationSquare()]!=0)){
+                captures.add(m);
+            }
+        }
+        return captures;
+    }
+
     public boolean isAttacked(int square, boolean byWhite){
         int newSquare;
         int pieceAtSquare;
@@ -766,37 +774,12 @@ public class Board implements BoardInterface {
         }
     }
 
-    public void display(){
-        System.out.println("\n\n*** Displaying board ***");
-        if (!this.inProgress) {
-            System.out.print("Game terminated with outcome ");
-            System.out.println(this.result);
-        }
-
-        System.out.print("Castling permissions: ");
-        for (int i=0; i<this.castlePermissions.length; i++){
-            System.out.print(this.castlePermissions[i]);
-        }
-        System.out.print('\n');
-
-        // Prints board itself
-        for (int i=0; i<this.board.length; i++){
-            if (this.board[i] != BoardConstants.OUTSIDE_BOARD){
-                System.out.print(this.board[i]);
-                if (i%10 == 8){
-                    System.out.print('\n');
-                }
-            }
-        }
-        System.out.println("Showing piece positions");
-        for (Integer key : this.piecePositions.keySet()){
-            System.out.print("Piece ");
-            System.out.println(key);
-            for (Integer i : this.piecePositions.get(key)){
-                System.out.print(i);
-                System.out.print(", ");
-            }
-            System.out.println("");
+    public boolean isKingSquareAttacked(){
+        if (this.isWhiteTurn()){
+            return this.isAttacked(this.piecePositions.get(BoardConstants.WHITE_KING).getFirstItem(), false);
+        } else {
+            return this.isAttacked(this.piecePositions.get(BoardConstants.BLACK_KING).getFirstItem(), true);
         }
     }
+
 }

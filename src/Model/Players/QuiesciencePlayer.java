@@ -5,32 +5,33 @@ import Model.DataStructures.Move;
 import Model.DataStructures.Tuple;
 import Model.Game.Board;
 
-public class AlphabetaPlayer implements PlayerInterface {
+public class QuiesciencePlayer implements PlayerInterface {
     private Board board;
-    //private EvaluationInterface evaluator;
-    private AdvancedEvaluation evaluator;
-    private final int DEPTH = 5;
+    private EvaluationInterface evaluator;
+    private final int DEPTH = 4;
+    private final int Q_DEPTH = 5;
     private int iterations;
+    private int qiterations;
 
-    public AlphabetaPlayer(Board board){
+    public QuiesciencePlayer(Board board){
         this.board = board;
         this.evaluator = new AdvancedEvaluation(board);
     }
 
     public Move findMove(){
+        Move move;
         if (this.board.getMoveCount()<6){
-            return this.getBookMove();
+            move = this.getBookMove();
         } else {
             this.iterations = 0;
-            Tuple<Move, Integer> outcome = this.alphabeta(this.DEPTH, -40000, 40000);
+            this.qiterations = 0;
+            move = this.alphabeta(this.DEPTH, -40000, 40000).x;
             System.out.print("Iterations: ");
-            System.out.println(this.iterations);
-            System.out.print("Current evaluation: ");
-            System.out.println(this.evaluator.evaluate());
-            System.out.print("Predicted evaluation: ");
-            System.out.println(outcome.y);
-            return outcome.x;
+            System.out.println(iterations);
+            System.out.print("Q iterations: ");
+            System.out.println(this.qiterations);
         }
+        return move;
     }
 
     private Move getBookMove(){
@@ -57,9 +58,15 @@ public class AlphabetaPlayer implements PlayerInterface {
 
     private Tuple<Move, Integer> alphabeta(int depth, int alpha, int beta){
         this.iterations++;
-        if (depth==0 || this.board.gameOver()){
+        // If terminal node or we've reached the max depth
+        if (this.board.gameOver()){
             return new Tuple<>(null, this.evaluator.evaluate());
         }
+        // If we have reached the first limit of our search
+        if (depth==0){
+            return this.quiescence(alpha, beta, this.Q_DEPTH);
+        }
+
         if (this.board.isWhiteTurn()){
             int bestScore = -40000;
             Move bestMove = null;
@@ -73,7 +80,7 @@ public class AlphabetaPlayer implements PlayerInterface {
                     bestScore = outcome.y;
                     bestMove = m;
                 }
-                if (bestScore >= beta){
+                if (bestScore>=beta){
                     // Beta cutoff
                     break;
                 }
@@ -109,4 +116,64 @@ public class AlphabetaPlayer implements PlayerInterface {
         }
     }
 
+    private Tuple<Move, Integer> quiescence(int alpha, int beta, int depth){
+        this.qiterations++;
+
+        // Check if terminal node
+        if (this.board.gameOver() || depth==0){
+            return new Tuple<>(null, this.evaluator.evaluate());
+        }
+        int stand_pat = this.evaluator.evaluate();
+
+        if (this.board.isWhiteTurn()){
+            if (stand_pat >= beta){
+                return new Tuple<>(null, beta);
+            }
+            if (alpha < stand_pat){
+                alpha = stand_pat;
+            }
+            Tuple<Move, Integer> outcome;
+            LinkedList_<Move> captures = this.board.generateCaptures();
+            if (captures.getLength()==0){
+                return new Tuple<>(null, stand_pat);
+            }
+            for (Move m : captures){
+                this.board.makeMove(m);
+                outcome = this.quiescence(alpha, beta, depth-1);
+                this.board.undoMove();
+                if (outcome.y >= beta){
+                    return new Tuple<>(null, beta);
+                }
+                if (outcome.y > alpha){
+                    alpha = outcome.y;
+                }
+            }
+            return new Tuple<>(null, alpha);
+        }
+        else {
+            if (stand_pat <= alpha){
+                return new Tuple<>(null, alpha);
+            }
+            if (beta > stand_pat){
+                beta = stand_pat;
+            }
+            Tuple<Move, Integer> outcome;
+            LinkedList_<Move> captures = this.board.generateCaptures();
+            if (captures.getLength()==0){
+                return new Tuple<>(null, stand_pat);
+            }
+            for (Move m : captures){
+                this.board.makeMove(m);
+                outcome = this.quiescence(alpha, beta, depth-1);
+                this.board.undoMove();
+                if (outcome.y <= alpha){
+                    return new Tuple<>(null, alpha);
+                }
+                if (outcome.y < beta){
+                    beta = outcome.y;
+                }
+            }
+            return new Tuple<>(null, beta);
+        }
+    }
 }

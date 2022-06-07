@@ -5,6 +5,7 @@ import Model.Game.Board;
 import Model.Players.AlphabetaPlayer;
 import Model.Players.MinimaxPlayer;
 import Model.Players.PlayerInterface;
+import Model.Players.QuiesciencePlayer;
 import View.ChessGUI;
 
 import java.util.InputMismatchException;
@@ -19,7 +20,7 @@ public class Hand {
 
     public void makeCPUMove(){
         System.out.println("Thinking...");
-        PlayerInterface engine = new AlphabetaPlayer(this.board);
+        PlayerInterface engine = new QuiesciencePlayer(this.board);
         Move engineMove = engine.findMove();
         this.board.makeMove(engineMove);
 

@@ -233,7 +233,7 @@ public class AdvancedEvaluation implements EvaluationInterface {
         this.pieceValues.put(3, 330);
         this.pieceValues.put(-3, -330);
         this.pieceValues.put(4, 500);
-        this.pieceValues.put(-4, 500);
+        this.pieceValues.put(-4, -500);
         this.pieceValues.put(5, 900);
         this.pieceValues.put(-5, -900);
         this.pieceValues.put(6, 20000);
@@ -271,18 +271,41 @@ public class AdvancedEvaluation implements EvaluationInterface {
     }
 
     public final int evaluate(){
+        // *** If statement can be extracted to be faster ***
         int total = 0;
 
         // Foreach piece
-        for (Integer key : this.board.piecePositions.keySet()){
+        for (Integer piece : this.board.piecePositions.keySet()){
             // For each position that the piece is in
-            for (int position : this.board.piecePositions.get(key)){
+            for (int position : this.board.piecePositions.get(piece)){
                 if (this.boardIsInMidGame()){
-                    total = total + this.midGamePieceSquareTables.get(key)[position];
+                    total = total + this.midGamePieceSquareTables.get(piece)[position];
+                } else {
+                    total = total + this.endGamePieceSquareTables.get(piece)[position];
                 }
             }
         }
         return total;
     }
 
+    public final int guidedEval(){
+        System.out.println("\n\n *** Guided Eval Starting ***");
+        int total = 0;
+        for (Integer piece : this.board.piecePositions.keySet()){
+            System.out.print("--> new piece ");
+            System.out.println(piece);
+            for (int position : this.board.piecePositions.get(piece)){
+                System.out.print(position);
+                System.out.print("$");
+                if (this.boardIsInMidGame()){
+                    System.out.print(this.midGamePieceSquareTables.get(piece)[position]);
+                    System.out.print("£");
+                    total = total + this.midGamePieceSquareTables.get(piece)[position];
+                    System.out.print(total);
+                    System.out.println("");
+                }
+            }
+        }
+        return total;
+    }
 }
