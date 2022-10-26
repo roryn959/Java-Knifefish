@@ -265,24 +265,39 @@ public class AdvancedEvaluation implements EvaluationInterface {
         return newArray;
     }
 
-    private final boolean boardIsInMidGame(){
-        // *** IMPLEMENT ***
-        return true;
+    private boolean boardIsInMidGame(){
+        return (this.noQueens() || this.fewMinors());
+    }
+
+    private boolean noQueens(){
+        int numQueens = this.board.piecePositions.get(BoardConstants.WHITE_QUEEN).getLength() + this.board.piecePositions.get(BoardConstants.BLACK_QUEEN).getLength();
+        return numQueens==0;
+    }
+
+    private boolean fewMinors(){
+        // Return true if the number of minor pieces is less than three
+        int numWhiteMinors = this.board.piecePositions.get(BoardConstants.WHITE_BISHOP).getLength() + this.board.piecePositions.get(BoardConstants.WHITE_KNIGHT).getLength();
+        int numBlackMinors = this.board.piecePositions.get(BoardConstants.BLACK_BISHOP).getLength() + this.board.piecePositions.get(BoardConstants.BLACK_KNIGHT).getLength();
+        return (numBlackMinors+numWhiteMinors < 3);
     }
 
     public final int evaluate(){
         // *** If statement can be extracted to be faster ***
         int total = 0;
 
+        // Pre-compute which table to use
+        HashMap<Integer, int[]> table;
+        if (this.boardIsInMidGame()){
+            table = this.midGamePieceSquareTables;
+        } else {
+            table = this.endGamePieceSquareTables;
+        }
+
         // Foreach piece
         for (Integer piece : this.board.piecePositions.keySet()){
             // For each position that the piece is in
             for (int position : this.board.piecePositions.get(piece)){
-                if (this.boardIsInMidGame()){
-                    total = total + this.midGamePieceSquareTables.get(piece)[position];
-                } else {
-                    total = total + this.endGamePieceSquareTables.get(piece)[position];
-                }
+                total = total + table.get(piece)[position];
             }
         }
         return total;

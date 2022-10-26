@@ -120,7 +120,7 @@ public class QuiesciencePlayer implements PlayerInterface {
         this.qiterations++;
 
         // Check if terminal node
-        if (this.board.gameOver() || depth==0){
+        if (this.board.gameOver()){
             return new Tuple<>(null, this.evaluator.evaluate());
         }
         int stand_pat = this.evaluator.evaluate();
